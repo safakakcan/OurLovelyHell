@@ -9,12 +9,19 @@ public class PlayerController : MonoBehaviour
     public GameObject gameUI;
     public GameObject windowPrefab;
     public GameObject inventoryPrefab;
+    public GameObject dialogPanelPrefab;
+    public GameObject upgradePanelPrefab;
+    public GameObject popupPrefab;
+    public GameObject modifierIconPrefab;
+    public Transform modifierPanel;
+    public UnityEngine.UI.InputField username;
+    public UnityEngine.UI.InputField password;
     public StickController stickController;
     public Drag dragPad;
-    public UnityEngine.UI.Text pingText;
     public UnityEngine.UI.Image hpbar;
     public float lookX = 15;
-    float zoom = -2.5f;
+    public float zoom = -2.5f;
+    public bool busy = false;
 
     // Start is called before the first frame update
     void Start()
@@ -25,14 +32,13 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (character == null)
+        if (character == null || busy)
             return;
 
-        if (Input.GetKeyDown(KeyCode.X))
-            character.ApplyDamage(10);
+        if (Input.GetKeyUp(KeyCode.U))
+            ShowUpgrade();
 
-        hpbar.fillAmount = character.health / character.maxHealth;
-        pingText.text = "Ping: " + GameObject.FindGameObjectWithTag("GameController").GetComponent<NetworkController>().ping.ToString();
+        hpbar.fillAmount = character.stats.health / character.stats.maxHealth;
 
         int speedChange;
         int directionChange;
@@ -53,6 +59,24 @@ public class PlayerController : MonoBehaviour
         else
         {
             speedChange = 0;
+        }
+
+        if (Input.GetKey(KeyCode.D))
+        {
+            directionChange = 1;
+        }
+        else if (Input.GetKey(KeyCode.A))
+        {
+            directionChange = -1;
+        }
+
+        if (Input.GetKey(KeyCode.W))
+        {
+            speedChange = 1;
+        }
+        else if (Input.GetKey(KeyCode.S))
+        {
+            speedChange = -1;
         }
 
         character.speedChange = speedChange;
@@ -88,49 +112,51 @@ public class PlayerController : MonoBehaviour
         transform.LookAt(character.transform.TransformPoint(new Vector3(-1, 1.75f, 0)));
     }
 
-    public void MeleeAttackBegin()
+    public void UseSkill(string skill)
     {
-        if (character.equipments[2].quantity > 0 && gameData.items[character.equipments[2].index].itemType == ItemType.Equipment && gameData.items[character.equipments[2].index].equipmentType == EquipmentType.Weapon)
-            GameObject.FindGameObjectWithTag("GameController").GetComponent<UConnect>().CallEvent("send", "World", "MeleeAttack", character.name, "1");
-    }
-
-    public void MeleeAttackEnd()
-    {
-        GameObject.FindGameObjectWithTag("GameController").GetComponent<UConnect>().CallEvent("send", "World", "MeleeAttack", character.name, "0");
-    }
-
-    public void JumpAttackBegin()
-    {
-        if (character.equipments[2].quantity > 0 && gameData.items[character.equipments[2].index].itemType == ItemType.Equipment && gameData.items[character.equipments[2].index].equipmentType == EquipmentType.Weapon)
-            GameObject.FindGameObjectWithTag("GameController").GetComponent<UConnect>().CallEvent("send", "World", "JumpAttack", character.name, "true");
-    }
-
-    public void JumpAttackEnd()
-    {
-        GameObject.FindGameObjectWithTag("GameController").GetComponent<UConnect>().CallEvent("send", "World", "JumpAttack", character.name, "false");
-    }
-
-    public void JumpBegin()
-    {
-        GameObject.FindGameObjectWithTag("GameController").GetComponent<UConnect>().CallEvent("send", "World", "Jump", character.name, "true");
+        GameObject.FindGameObjectWithTag("GameController").GetComponent<UConnect>().CallEvent("send", "World", "Skill", skill, character.name);
     }
 
     public void ShowInventory()
     {
-        if (GameObject.FindObjectOfType<Inventory>() != null)
+        if (GameObject.FindObjectOfType<Inventory>() != null || character == null || busy)
             return;
 
         var window = Instantiate<GameObject>(windowPrefab);
         var inventory = Instantiate<GameObject>(inventoryPrefab);
+        inventory.GetComponent<Inventory>().Init();
+        window.GetComponent<Window>().Init("Inventory", inventory.transform, 0.5f, 0.9f);
+    }
 
-        window.transform.SetParent(gameUI.transform);
-        window.transform.localPosition = Vector2.zero;
-        window.transform.localRotation = Quaternion.identity;
-        window.transform.localScale = Vector2.one;
-        window.GetComponent<RectTransform>().offsetMin = Vector2.one;
-        window.GetComponent<RectTransform>().offsetMax = Vector2.one;
-        window.GetComponent<RectTransform>().sizeDelta = new Vector2(900, window.GetComponent<RectTransform>().sizeDelta.y - 100);
+    public void ShowUpgrade()
+    {
+        if (GameObject.FindObjectOfType<UpgradePanel>() != null || character == null || busy)
+            return;
 
-        window.GetComponent<Window>().Init("Inventory", inventory.transform);
+        var window = Instantiate<GameObject>(windowPrefab);
+        var content = Instantiate<GameObject>(upgradePanelPrefab);
+        content.GetComponent<UpgradePanel>().Init();
+        window.GetComponent<Window>().Init("Upgrade", content.transform, 0.75f, 0.75f);
+    }
+
+    public void ShowPopup(string title, string text)
+    {
+        var popup = Instantiate<GameObject>(popupPrefab, GameObject.FindGameObjectWithTag("Canvas").transform);
+        popup.transform.GetChild(0).GetComponent<UnityEngine.UI.Text>().text = title;
+        popup.transform.GetChild(1).GetComponent<UnityEngine.UI.Text>().text = text;
+        Destroy(popup, 5);
+    }
+
+    public void Login()
+    {
+        GameObject.FindGameObjectWithTag("GameController").GetComponent<NetworkController>().Login(username.text, password.text);
+    }
+
+    public void ClearContent(UnityEngine.UI.ScrollRect rect)
+    {
+        for (int i = 0; i < rect.content.childCount; i++)
+        {
+            Destroy(rect.content.GetChild(i).gameObject);
+        }
     }
 }

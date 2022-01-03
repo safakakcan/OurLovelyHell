@@ -4,14 +4,21 @@ using UnityEngine;
 
 public class ItemSlot : MonoBehaviour
 {
-    public bool equipment = false;
-    public EquipmentType equipmentType = EquipmentType.Weapon;
-    public GameObject itemInfoPrefab;
+    public Sprite unlockedSprite;
+    public Sprite lockedSprite;
+    public bool trash = false;
+    public bool temporary = false;
+    public bool locked = false;
+    public List<ItemType> itemTypes;
+    public List<EquipmentType> equipmentTypes;
 
+    [HideInInspector]
+    public string id;
     [HideInInspector]
     public int index;
     [HideInInspector]
     public InventoryItem[] array;
+
     Transform draggingItem = null;
 
     // Start is called before the first frame update
@@ -25,6 +32,15 @@ public class ItemSlot : MonoBehaviour
     {
         if (draggingItem != null)
             draggingItem.GetComponent<RectTransform>().anchoredPosition = GameObject.FindGameObjectWithTag("Canvas").GetComponent<RectTransform>().InverseTransformPoint((Vector2)Input.mousePosition);
+    }
+
+    public void Init(int _index, string _id, InventoryItem[] _array, bool _locked = false)
+    {
+        index = _index;
+        id = _id;
+        array = _array;
+        locked = _locked;
+        GetComponent<UnityEngine.UI.Image>().sprite = locked ? lockedSprite : unlockedSprite;
     }
 
     public void BeginDrag()
@@ -54,14 +70,23 @@ public class ItemSlot : MonoBehaviour
             ItemSlot slot;
             if (result.gameObject.TryGetComponent<ItemSlot>(out slot))
             {
-                if (slot.index == index)
+                if ((slot.array == array && slot.index == index) || slot.locked || trash || array[index].quantity == 0)
                     return;
 
-                var itemData = array[index].index > -1 ? Camera.main.GetComponent<PlayerController>().gameData.items[array[index].index] : null;
-                var otherItemData = slot.array[slot.index].index > -1 ? Camera.main.GetComponent<PlayerController>().gameData.items[slot.array[slot.index].index] : null;
+                if (slot.trash)
+                {
+                    array[index] = new InventoryItem(0, 0);
+                    slot.array[slot.index] = new InventoryItem(0, 0);
+                    Refresh();
+                    slot.Refresh();
+                    return;
+                }
+                
+                var itemData = Camera.main.GetComponent<PlayerController>().gameData.items[array[index].index];
+                var otherItemData = Camera.main.GetComponent<PlayerController>().gameData.items[slot.array[slot.index].index];
 
-                if ((array[index].quantity == 0 || (!slot.equipment) || (slot.equipment && itemData.itemType == ItemType.Equipment && slot.equipmentType == itemData.equipmentType)) &&
-                    (slot.array[slot.index].quantity == 0 || (!equipment) || (equipment && otherItemData.itemType == ItemType.Equipment && equipmentType == otherItemData.equipmentType)))
+                if ((array[index].quantity == 0 || (itemData.itemType != ItemType.Equipment && slot.itemTypes.Contains(itemData.itemType)) || (slot.itemTypes.Contains(ItemType.Equipment) && itemData.itemType == ItemType.Equipment && slot.equipmentTypes.Contains(itemData.equipmentType))) &&
+                    (slot.array[slot.index].quantity == 0 || (otherItemData.itemType != ItemType.Equipment && itemTypes.Contains(otherItemData.itemType)) || (itemTypes.Contains(ItemType.Equipment) && otherItemData.itemType == ItemType.Equipment && equipmentTypes.Contains(otherItemData.equipmentType))))
                 {
                     int otherIndex = slot.index;
                     var otherArray = slot.array;
@@ -92,8 +117,9 @@ public class ItemSlot : MonoBehaviour
 
                     Refresh();
                     slot.Refresh();
-                    break;
                 }
+
+                break;
             }
         }
     }
@@ -119,8 +145,15 @@ public class ItemSlot : MonoBehaviour
             item.transform.localScale = Vector2.one;
         }
 
-        if (equipment)
+        if (itemTypes.Count == 1 && itemTypes.Contains(ItemType.Equipment))
             Camera.main.GetComponent<PlayerController>().character.RefreshView();
+
+        Camera.main.GetComponent<PlayerController>().character.CheckQuest();
+
+        if (!temporary)
+        {
+            // Network
+        }
     }
 
     public void ShowInfo()
@@ -128,7 +161,7 @@ public class ItemSlot : MonoBehaviour
         if (array[index].quantity == 0)
             return;
 
-        var info = Instantiate(itemInfoPrefab, GameObject.FindGameObjectWithTag("Canvas").transform);
+        var info = Instantiate(Camera.main.GetComponent<PlayerController>().gameData.itemInfoPrefab, GameObject.FindGameObjectWithTag("Canvas").transform);
         info.transform.GetChild(0).GetComponent<RectTransform>().position = transform.GetComponent<RectTransform>().position;
         info.GetComponent<ItemInfo>().Init(array[index].index);
     }

@@ -4,35 +4,54 @@ using UnityEngine;
 
 public class Inventory : MonoBehaviour
 {
+    [HideInInspector]
     public Transform[] equipments;
+    [HideInInspector]
     public Transform[] slots;
+
+    [Header("Trash")]
+    public Transform trashSlot;
+    [HideInInspector]
+    public InventoryItem[] trash = new InventoryItem[1];
+    
 
     // Start is called before the first frame update
     void Start()
     {
-        equipments = new Transform[transform.GetChild(1).childCount];
-        for (int i = 0; i < equipments.Length; i++)
-        {
-            equipments[i] = transform.GetChild(1).GetChild(i);
-            equipments[i].GetComponent<ItemSlot>().index = i;
-            equipments[i].GetComponent<ItemSlot>().array = Camera.main.GetComponent<PlayerController>().character.equipments; //
-        }
-
-        slots = new Transform[transform.GetChild(0).childCount];
-        for (int i = 0; i < slots.Length; i++)
-        {
-            slots[i] = transform.GetChild(0).GetChild(i);
-            slots[i].GetComponent<ItemSlot>().index = i;
-            slots[i].GetComponent<ItemSlot>().array = Camera.main.GetComponent<PlayerController>().character.inventory; //
-        }
-
-        Refresh();
+        
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    public void Init()
+    {
+        string playerName = Camera.main.name;
+        equipments = new Transform[transform.GetChild(1).childCount];
+
+        for (int i = 0; i < equipments.Length; i++)
+        {
+            equipments[i] = transform.GetChild(1).GetChild(i);
+            equipments[i].GetComponent<ItemSlot>().index = i;
+            equipments[i].GetComponent<ItemSlot>().array = Camera.main.GetComponent<PlayerController>().character.equipments; //
+            equipments[i].GetComponent<ItemSlot>().id = string.Format("users/{0}/equipments/{1}", playerName, i);
+        }
+
+        slots = new Transform[transform.GetChild(0).childCount];
+        for (int i = 0; i < slots.Length; i++)
+        {
+            slots[i] = transform.GetChild(0).GetChild(i);
+            slots[i].GetComponent<ItemSlot>().Init(i, string.Format("users/{0}/inventory/{1}", playerName, i), Camera.main.GetComponent<PlayerController>().character.inventory, Camera.main.GetComponent<PlayerController>().character.inventorySlotCount < i + 1);
+        }
+
+        trashSlot.GetComponent<ItemSlot>().index = 0;
+        trashSlot.GetComponent<ItemSlot>().array = trash;
+        //trashSlot.GetComponent<ItemSlot>().id = string.Format("users/{0}/trash", playerName);
+
+        Refresh();
     }
 
     public void Refresh()

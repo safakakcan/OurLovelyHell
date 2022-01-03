@@ -27,7 +27,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4797535440232259402}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -89,9 +89,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50a2ed75b379bd645abb5fb373cfaa93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  equipment: 0
-  equipmentType: 0
-  itemInfoPrefab: {fileID: 2504280929862071924, guid: 05e5f52fbb576b749b35b8a1eead878c, type: 3}
+  unlockedSprite: {fileID: 21300000, guid: 0d65a9e3c4a738945a0d237c62612554, type: 3}
+  lockedSprite: {fileID: 21300000, guid: 4b3d2095baccc2041b973b66b786b9d0, type: 3}
+  trash: 0
+  temporary: 0
+  locked: 0
+  itemTypes: 000000000100000002000000
+  equipmentTypes: 000000000100000002000000030000000400000005000000
+  id: 
   index: 0
   array: []
 --- !u!114 &4797535440232259505

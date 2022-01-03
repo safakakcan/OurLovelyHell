@@ -1675,13 +1675,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6328256320217949382}
-  m_LocalRotation: {x: -0.54167527, y: -0.50000006, z: 0.45451948, w: 0.5}
-  m_LocalPosition: {x: 0, y: 0.1, z: 0.025}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 7481450062706592991}
   m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: -5, y: -95, z: 90}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6349626478823266704
 GameObject:
   m_ObjectHideFlags: 0
@@ -1819,9 +1819,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controlled: 0
-  maxHealth: 100
-  health: 100
-  armor: 0
+  stats:
+    maxHealth: 100
+    health: 100
+    maxStamina: 100
+    stamina: 100
+    attack: 0
+    defence: 0
+    skillSpeed: 0
+    movementSpeed: 0
   speed: 0
   direction: 0
   speedChange: 0
@@ -1830,6 +1836,8 @@ MonoBehaviour:
   dead: 0
   updateFrequency: 5
   equipments:
+  - index: 0
+    quantity: 0
   - index: 0
     quantity: 0
   - index: 0

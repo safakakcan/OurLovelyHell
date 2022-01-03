@@ -5,17 +5,25 @@ using System.Linq;
 
 public class NetworkController : MonoBehaviour
 {
+    [Header("Prefabs")]
     public GameObject characterPrefab;
+
+    [Header("Entities")]
     [SerializeField]
     public List<Entity> entities = new List<Entity>();
+
+    [Header("Connection")]
     public int ping = 999;
     private Coroutine pingDetect = null;
     private System.DateTime pingTime = System.DateTime.Now;
 
+    [Header("UI")]
+    public UnityEngine.UI.Text pingText;
+
     // Start is called before the first frame update
     void Start()
     {
-        //StartUDPServer();
+        
     }
 
     // Update is called once per frame
@@ -32,7 +40,7 @@ public class NetworkController : MonoBehaviour
     {
         yield return new WaitForSeconds(1);
         pingTime = System.DateTime.Now;
-        GameObject.FindGameObjectWithTag("GameController").GetComponent<UConnect>().SendRequest("Ping", pingTime.Ticks.ToString());
+        GetComponent<UConnect>().SendRequest("Ping", pingTime.Ticks.ToString());
     }
 
     public void CalculatePing(NetworkData data)
@@ -48,7 +56,7 @@ public class NetworkController : MonoBehaviour
         }
 
         pingDetect = null;
-        //Debug.Log("Ping: " + ping);
+        pingText.text = "Ping: " + GameObject.FindGameObjectWithTag("GameController").GetComponent<NetworkController>().ping.ToString();
     }
 
     public void UpdateTransforms(NetworkData data)
@@ -100,9 +108,14 @@ public class NetworkController : MonoBehaviour
         }
     }
 
+    public void Login(string username, string password)
+    {
+        GetComponent<UConnect>().SendRequest("login", username, password);
+    }
+
     public void JoinGame(NetworkData data)
     {
-        GameObject.FindGameObjectWithTag("GameController").GetComponent<UConnect>().SendRequest("JoinGame", "World");
+        GetComponent<UConnect>().SendRequest("JoinGame", "World");
     }
 
     public void LoadGame(NetworkData data)
@@ -112,7 +125,7 @@ public class NetworkController : MonoBehaviour
             string[] characters = data.array[0].Split(';');
             foreach (string character in characters)
             {
-                string[] values = data.array[0].Split('|');
+                string[] values = character.Split('|');
                 var c = Instantiate<GameObject>(characterPrefab);
                 entities.Add(c.GetComponent<Entity>());
 
@@ -129,7 +142,7 @@ public class NetworkController : MonoBehaviour
 
         string charName = "Player_" + (Random.Range(100000, 999999).ToString());
         Camera.main.name = charName;
-        GameObject.FindGameObjectWithTag("GameController").GetComponent<UConnect>().CallEvent("CreateCharacter", charName, "1", "0", "-2");
+        GetComponent<UConnect>().CallEvent("CreateCharacter", charName, "1", "0", "-2");
     }
 
     public void SpawnCharacter(NetworkData data)
@@ -147,6 +160,7 @@ public class NetworkController : MonoBehaviour
             Camera.main.transform.localRotation = Quaternion.Euler(new Vector3(20, 0, 0));
             Camera.main.GetComponent<PlayerController>().character = character.GetComponent<Character>();
             Camera.main.GetComponent<PlayerController>().gameUI.SetActive(true);
+            character.GetComponent<Entity>().authority = true;
         }
 
         character.GetComponent<Entity>().Init();
@@ -163,43 +177,15 @@ public class NetworkController : MonoBehaviour
         }
     }
 
-    public void MeleeAttack(NetworkData data)
+    public void UseSkill(NetworkData data)
     {
-        Entity entity = (from e in entities where e.name == data.array[1] select e).FirstOrDefault();
+        Entity entity = (from e in entities where e.name == data.array[2] select e).FirstOrDefault();
         if (entity != null)
-            entity.GetComponent<Animator>().SetInteger("MeleeAttack", int.Parse(data.array[2]));
+            entity.GetComponent<Animator>().SetTrigger(data.array[1]);
     }
 
-    public void JumpAttack(NetworkData data)
+    public void ApplyDamage()
     {
-        Entity entity = (from e in entities where e.name == data.array[1] select e).FirstOrDefault();
-        if (entity != null)
-            entity.GetComponent<Animator>().SetBool("JumpAttack", bool.Parse(data.array[2]));
-    }
 
-    public void Jump(NetworkData data)
-    {
-        Entity entity = (from e in entities where e.name == data.array[1] select e).FirstOrDefault();
-        if (entity != null)
-        {
-            entity.GetComponent<Animator>().SetBool("Jump", bool.Parse(data.array[2]));
-            StartCoroutine(EndJump(entity));
-        }
-    }
-
-    IEnumerator EndJump(Entity entity)
-    {
-        yield return new WaitForSeconds(0.25f);
-        entity.GetComponent<Animator>().SetBool("Jump", false);
-    }
-
-    public void StartUDPServer()
-    {
-        UDP.UDPSocket s = new UDP.UDPSocket();
-        s.Server("127.0.0.1", 27000);
-
-        UDP.UDPSocket c = new UDP.UDPSocket();
-        c.Client("127.0.0.1", 27000);
-        c.Send("TEST!");
     }
 }

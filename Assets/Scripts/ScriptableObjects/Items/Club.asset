@@ -13,12 +13,10 @@ MonoBehaviour:
   m_Name: Club
   m_EditorClassIdentifier: 
   itemName: Club
-  itemType: 2
+  description: 
+  itemType: 0
   sprite: {fileID: 21300000, guid: 7c40a5054feb38649a0e94edad5f5aa0, type: 3}
   stackSize: 1
-  localPosition: {x: 0, y: 0, z: 0}
-  localRotation: {x: 0, y: 0, z: 0, w: 0}
-  localScale: {x: 0, y: 0, z: 0}
   healthIncrease: 0
   foodIncrease: 0
   waterIncrease: 0
@@ -26,6 +24,28 @@ MonoBehaviour:
   equipmentType: 0
   maxHealth: 100
   health: 100
-  damageIncrease: 8
-  armorIncrease: 0
-  speedIncrease: 0
+  statModifiers:
+    maxHealth:
+      type: 0
+      amount: 0
+    health:
+      type: 0
+      amount: 0
+    maxStamina:
+      type: 0
+      amount: 0
+    stamina:
+      type: 0
+      amount: 0
+    attack:
+      type: 0
+      amount: 0
+    defence:
+      type: 0
+      amount: 0
+    skillSpeed:
+      type: 0
+      amount: 0
+    movementSpeed:
+      type: 0
+      amount: 0

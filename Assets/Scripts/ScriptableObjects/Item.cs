@@ -10,7 +10,9 @@ public class Item : ScriptableObject
     public string description;
     public ItemType itemType;
     public Sprite sprite;
+    public int requiredLevel = 1;
     public int stackSize = 1;
+    public InventoryItem price = new InventoryItem(0, 1);
 
     [Header("Consumable")]
     public float healthIncrease;
@@ -20,11 +22,10 @@ public class Item : ScriptableObject
     [Header("Equipment")]
     public GameObject equipmentPrefab;
     public EquipmentType equipmentType;
+    public EquipmentGrade equipmentGrade;
     public float maxHealth;
     public float health;
-    public float damageIncrease;
-    public float armorIncrease;
-    public float speedIncrease;
+    public StatModifiers statModifiers;
 }
 
 [System.Serializable]
@@ -38,18 +39,31 @@ public enum ItemType
 [System.Serializable]
 public enum EquipmentType
 {
-    Weapon,
+    PrimaryWeapon,
+    SecondaryWeapon,
     Head,
     Body,
     Legs,
     Feet
 }
 
-[System.Serializable]
-public enum WeaponType
+public enum Grade
 {
-    None,
-    OneHanded,
-    TwoHanded,
-    Bow
+    Dark,
+    Normal,
+    Polished,
+    Illuminated,
+    Reinforced,
+    Enchanted,
+    Resurrected,
+    Blessed,
+    Deified
+}
+
+public class EquipmentGrade
+{
+    public Grade grade = Grade.Normal;
+    public int lowerGradeIndex = -1;
+    public int higherGradeIndex = -1;
+    public InventoryItem[] recipe;
 }

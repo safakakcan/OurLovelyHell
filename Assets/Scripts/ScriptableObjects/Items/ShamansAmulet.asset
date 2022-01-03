@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37febad060a9e0244be8e88a7b52c103, type: 3}
+  m_Name: ShamansAmulet
+  m_EditorClassIdentifier: 
+  itemName: Shaman's Amulet
+  description: 
+  itemType: 2
+  sprite: {fileID: 21300000, guid: bb83b7fdc1b900b46805472bbdf503c2, type: 3}
+  stackSize: 1
+  healthIncrease: 0
+  foodIncrease: 0
+  waterIncrease: 0
+  equipmentPrefab: {fileID: 4599195252064734256, guid: 74e3307bbbab89b44884c33b4c6838c6, type: 3}
+  equipmentType: 1
+  maxHealth: 100
+  health: 100
+  statModifiers:
+    name: 
+    maxHealth:
+      type: 0
+      amount: 0
+    health:
+      type: 0
+      amount: 0
+    maxStamina:
+      type: 0
+      amount: 0
+    stamina:
+      type: 0
+      amount: 0
+    attack:
+      type: 0
+      amount: 10
+    defence:
+      type: 0
+      amount: 0
+    skillSpeed:
+      type: 0
+      amount: 0
+    movementSpeed:
+      type: 0
+      amount: 0
+    duration:
+      type: 1
+      amount: 0
+    fx: {fileID: 0}

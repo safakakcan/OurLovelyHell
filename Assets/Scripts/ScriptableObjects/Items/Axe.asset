@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Axe
   m_EditorClassIdentifier: 
   itemName: Axe
-  itemType: 2
+  description: 
+  itemType: 0
   sprite: {fileID: 21300000, guid: d231e6d8156e2324a9e1fcc8151fd111, type: 3}
   stackSize: 1
   healthIncrease: 0
@@ -23,6 +24,28 @@ MonoBehaviour:
   equipmentType: 0
   maxHealth: 100
   health: 100
-  damageIncrease: 27
-  armorIncrease: 0
-  speedIncrease: 0
+  statModifiers:
+    maxHealth:
+      type: 0
+      amount: 0
+    health:
+      type: 0
+      amount: 0
+    maxStamina:
+      type: 0
+      amount: 0
+    stamina:
+      type: 0
+      amount: 0
+    attack:
+      type: 0
+      amount: 0
+    defence:
+      type: 0
+      amount: 0
+    skillSpeed:
+      type: 0
+      amount: 0
+    movementSpeed:
+      type: 0
+      amount: 0

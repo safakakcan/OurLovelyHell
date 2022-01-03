@@ -6,11 +6,17 @@ using System.Linq;
 public class Character : Entity
 {
     [Header("Slots")]
-    public InventoryItem[] equipments = new InventoryItem[5];
+    public int inventorySlotCount = 10;
+    public InventoryItem[] equipments = new InventoryItem[6];
     public InventoryItem[] inventory = new InventoryItem[24];
+
+    [Header("Quests")]
+    public List<QuestData> quests;
 
     [Header("Equipment Sockets")]
     public Transform handR_Socket;
+    public Transform handL_Socket;
+
     [Header("Sounds")]
     public AudioClip stepSound;
 
@@ -22,7 +28,8 @@ public class Character : Entity
             AddItemToInventory(new InventoryItem(i, 1));
         }
 
-        equipments[2] = new InventoryItem(5, 1);
+        equipments[0] = new InventoryItem(7, 1);
+        equipments[1] = new InventoryItem(8, 1);
 
         RefreshView();
     }
@@ -40,6 +47,50 @@ public class Character : Entity
         //transform.Rotate(Vector3.up * direction * 4);
     }
 
+    public override Stats TotalStats()
+    {
+        Stats s = new Stats();
+
+        s.attack += stats.attack;
+        s.defence += stats.defence;
+        s.maxHealth += stats.maxHealth;
+        s.health += stats.health;
+        s.maxStamina += stats.stamina;
+        s.stamina += stats.stamina;
+        s.movementSpeed += stats.movementSpeed;
+        s.skillSpeed += stats.skillSpeed;
+
+        foreach (var modifierData in statModifiers)
+        {
+            var modifier = Camera.main.GetComponent<PlayerController>().gameData.modifiers[modifierData.index];
+            s.attack = modifier.attack.type == EModifierType.Multiply ? s.attack * modifier.attack.amount : s.attack + modifier.attack.amount;
+            s.defence = modifier.defence.type == EModifierType.Multiply ? s.defence * modifier.defence.amount : s.defence + modifier.defence.amount;
+            s.maxHealth = modifier.maxHealth.type == EModifierType.Multiply ? s.maxHealth * modifier.maxHealth.amount : s.maxHealth + modifier.maxHealth.amount;
+            s.maxStamina = modifier.maxStamina.type == EModifierType.Multiply ? s.maxStamina * modifier.maxStamina.amount : s.maxStamina + modifier.maxStamina.amount;
+            s.movementSpeed = modifier.movementSpeed.type == EModifierType.Multiply ? s.movementSpeed * modifier.movementSpeed.amount : s.movementSpeed + modifier.movementSpeed.amount;
+            s.skillSpeed = modifier.skillSpeed.type == EModifierType.Multiply ? s.skillSpeed * modifier.skillSpeed.amount : s.skillSpeed + modifier.skillSpeed.amount;
+            s.expMultiplier = modifier.expMultiplier.type == EModifierType.Multiply ? s.expMultiplier * modifier.expMultiplier.amount : s.expMultiplier + modifier.expMultiplier.amount;
+            s.spMultiplier = modifier.spMultiplier.type == EModifierType.Multiply ? s.spMultiplier * modifier.spMultiplier.amount : s.spMultiplier + modifier.spMultiplier.amount;
+            s.chance = modifier.chance.type == EModifierType.Multiply ? s.chance * modifier.chance.amount : s.chance + modifier.chance.amount;
+        }
+
+        foreach (var e in equipments)
+        {
+            var modifier = Camera.main.GetComponent<PlayerController>().gameData.items[e.index].statModifiers;
+            s.attack = modifier.attack.type == EModifierType.Multiply ? s.attack * modifier.attack.amount : s.attack + modifier.attack.amount;
+            s.defence = modifier.defence.type == EModifierType.Multiply ? s.defence * modifier.defence.amount : s.defence + modifier.defence.amount;
+            s.maxHealth = modifier.maxHealth.type == EModifierType.Multiply ? s.maxHealth * modifier.maxHealth.amount : s.maxHealth + modifier.maxHealth.amount;
+            s.maxStamina = modifier.maxStamina.type == EModifierType.Multiply ? s.maxStamina * modifier.maxStamina.amount : s.maxStamina + modifier.maxStamina.amount;
+            s.movementSpeed = modifier.movementSpeed.type == EModifierType.Multiply ? s.movementSpeed * modifier.movementSpeed.amount : s.movementSpeed + modifier.movementSpeed.amount;
+            s.skillSpeed = modifier.skillSpeed.type == EModifierType.Multiply ? s.skillSpeed * modifier.skillSpeed.amount : s.skillSpeed + modifier.skillSpeed.amount;
+            s.expMultiplier = modifier.expMultiplier.type == EModifierType.Multiply ? s.expMultiplier * modifier.expMultiplier.amount : s.expMultiplier + modifier.expMultiplier.amount;
+            s.spMultiplier = modifier.spMultiplier.type == EModifierType.Multiply ? s.spMultiplier * modifier.spMultiplier.amount : s.spMultiplier + modifier.spMultiplier.amount;
+            s.chance = modifier.chance.type == EModifierType.Multiply ? s.chance * modifier.chance.amount : s.chance + modifier.chance.amount;
+        }
+
+        return s;
+    }
+
     void Step(AnimationEvent e)
     {
         if (e.animatorClipInfo.weight > 0.5f)
@@ -49,20 +100,36 @@ public class Character : Entity
         }
     }
 
-    void Hit()
+    void Slash(AnimationEvent e)
     {
-        RaycastHit hit;
-        if (Physics.Raycast(transform.position + transform.up, transform.TransformDirection(Vector3.forward), out hit, 2))
+        // forward distance; animation speed
+        string[] data = e.stringParameter.Split(';');
+        var slash = Instantiate<GameObject>(Camera.main.GetComponent<PlayerController>().gameData.slashFX[0]);
+        Vector3 front = transform.forward * float.Parse(data[0]);
+        slash.transform.position = transform.position + Vector3.up + front;
+        slash.transform.rotation = Quaternion.Euler(new Vector3(0, transform.rotation.eulerAngles.y, e.floatParameter));
+        slash.transform.GetChild(0).GetComponent<Animator>().speed = (data.Length > 1 ? float.Parse(data[1]) : 1) * GetComponent<Animator>().GetFloat("SkillSpeed");
+        GetComponent<AudioSource>().pitch = Random.Range(0.9f, 1.25f);
+        GetComponent<AudioSource>().PlayOneShot(Camera.main.GetComponent<PlayerController>().gameData.skillSounds[e.intParameter]);
+    }
+
+    void Hit(AnimationEvent e)
+    {
+        if (authority)
         {
-            Entity entity;
-            if (hit.collider.gameObject.TryGetComponent<Entity>(out entity))
+            RaycastHit hit;
+            if (Physics.Raycast(transform.position + transform.up, transform.TransformDirection(Vector3.forward), out hit, 2))
             {
-                //hit.collider.gameObject.GetComponent<Entity>().ApplyDamage(equipment?.damage ?? 10);
-                Camera.main.GetComponent<UConnect>().CallEvent("send", "World", "ApplyDamage", name, entity.name, (10).ToString("n2"));
+                Entity entity;
+                if (hit.collider.gameObject.TryGetComponent<Entity>(out entity))
+                {
+                    Camera.main.GetComponent<UConnect>().CallEvent("send", "World", "ApplyDamage", name, entity.name, 
+                        (e.floatParameter * (TotalStats().attack / TotalStats().defence) * Random.Range(0.9f, 1.1f)).ToString("n2"));
+                }
             }
+
+            Debug.DrawRay(transform.position + transform.up, transform.TransformDirection(Vector3.forward) * 2, Color.red, 2);
         }
-        
-        Debug.DrawRay(transform.position + transform.up, transform.TransformDirection(Vector3.forward) * 2, Color.red, 2);
     }
 
     public int AddItemToInventory(InventoryItem item)
@@ -70,7 +137,7 @@ public class Character : Entity
         int quantity = item.quantity;
         var gameData = Camera.main.GetComponent<PlayerController>().gameData;
 
-        for (int i = 0; i < inventory.Length; i++)
+        for (int i = 0; i < inventorySlotCount; i++)
         {
             if (inventory[i].index == item.index)
             {
@@ -105,7 +172,153 @@ public class Character : Entity
             }
         }
 
+        CheckQuest();
+        var inventoryPanel = GameObject.FindObjectOfType<Inventory>();
+        if (inventoryPanel != null)
+            inventoryPanel.Refresh();
+
         return quantity;
+    }
+
+    public bool ConsumeItemFromInventory(InventoryItem item)
+    {
+        int quantity = item.quantity;
+        bool available = false;
+        int count = 0;
+
+        for (int i = 0; i < inventorySlotCount; i++)
+        {
+            if (inventory[i].index == item.index && inventory[i].quantity > 0)
+            {
+                count += inventory[i].quantity;
+
+                if (count >= quantity)
+                {
+                    available = true;
+                    break;
+                }
+            }
+        }
+
+        if (available)
+        {
+            for (int i = 0; i < inventorySlotCount; i++)
+            {
+                if (inventory[i].index == item.index && inventory[i].quantity > 0)
+                {
+                    if (inventory[i].quantity - quantity >= 0)
+                    {
+                        inventory[i].quantity -= quantity;
+                        quantity = 0;
+                    }
+                    else
+                    {
+                        quantity -= inventory[i].quantity;
+                        inventory[i].quantity = 0;
+                    }
+
+                    if (quantity == 0)
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+
+        CheckQuest();
+        var inventoryPanel = GameObject.FindObjectOfType<Inventory>();
+        if (inventoryPanel != null)
+            inventoryPanel.Refresh();
+
+        return available;
+    }
+
+    public void UpdateQuest(QuestData newQuest)
+    {
+        var qData = Camera.main.GetComponent<PlayerController>().gameData.quests[newQuest.index];
+        var quest = (from q in quests where q.index == newQuest.index select q).FirstOrDefault();
+
+        if (quest == null)
+        {
+            quests.Add(newQuest);
+            newQuest.progress = new int[qData.conditions.Length];
+            CheckQuest();
+            Camera.main.GetComponent<PlayerController>().ShowPopup("Quest: " + newQuest.status.ToString(), "\"" + qData.name + "\"");
+        }
+        else if (quest.status != newQuest.status)
+        {
+            quest.status = newQuest.status;
+            Camera.main.GetComponent<PlayerController>().ShowPopup("Quest: " + newQuest.status.ToString(), "\"" + qData.name + "\"");
+        }
+    }
+
+    public void CheckQuest()
+    {
+        foreach (var quest in quests)
+        {
+            if (quest.status == EQuestStatus.Started || quest.status == EQuestStatus.Completed)
+            {
+                bool valid = true;
+
+                for (var i = 0; i < Camera.main.GetComponent<PlayerController>().gameData.quests[quest.index].conditions.Length; i++)
+                {
+                    var condition = Camera.main.GetComponent<PlayerController>().gameData.quests[quest.index].conditions[i];
+                    if (condition.condition == EQuestCondition.Bring)
+                    {
+                        int count = 0;
+
+                        foreach (var item in inventory)
+                        {
+                            if (Camera.main.GetComponent<PlayerController>().gameData.items[item.index].itemName == condition.target)
+                            {
+                                count += item.quantity;
+                            }
+                        }
+
+                        quest.progress[i] = count;
+                    }
+
+                    if (quest.progress[i] < condition.amount)
+                    {
+                        valid = false;
+                    }
+                }
+
+                if (valid)
+                {
+                    UpdateQuest(new QuestData(quest.index, EQuestStatus.Completed));
+                }
+                else
+                {
+                    UpdateQuest(new QuestData(quest.index, EQuestStatus.Started));
+                }
+            }
+        }
+    }
+
+    public void OnTargetKilled(Entity target)
+    {
+
+        bool check = false;
+
+        foreach (var quest in quests)
+        {
+            if (quest.status == EQuestStatus.Started)
+            {
+                for (var i = 0; i < Camera.main.GetComponent<PlayerController>().gameData.quests[quest.index].conditions.Length; i++)
+                {
+                    var condition = Camera.main.GetComponent<PlayerController>().gameData.quests[quest.index].conditions[i];
+                    if (condition.condition == EQuestCondition.Kill && condition.target == target.name)
+                    {
+                        quest.progress[i]++;
+                        check = true;
+                    }
+                }
+            }
+        }
+
+        if (check)
+            CheckQuest();
     }
 
     public void RefreshView()
@@ -113,9 +326,17 @@ public class Character : Entity
         if (handR_Socket.childCount > 0)
             Destroy(handR_Socket.GetChild(0).gameObject);
 
-        if (equipments[2].quantity > 0)
+        if (handL_Socket.childCount > 0)
+            Destroy(handL_Socket.GetChild(0).gameObject);
+
+        if (equipments[0].quantity > 0)
         {
-            Instantiate(Camera.main.GetComponent<PlayerController>().gameData.items[equipments[2].index].equipmentPrefab, handR_Socket);
+            Instantiate(Camera.main.GetComponent<PlayerController>().gameData.items[equipments[0].index].equipmentPrefab, handR_Socket);
+        }
+
+        if (equipments[1].quantity > 0)
+        {
+            Instantiate(Camera.main.GetComponent<PlayerController>().gameData.items[equipments[1].index].equipmentPrefab, handL_Socket);
         }
     }
 }
