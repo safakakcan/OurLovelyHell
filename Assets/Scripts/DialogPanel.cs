@@ -64,7 +64,7 @@ public class DialogPanel : MonoBehaviour
             }
         }
 
-        Camera.main.GetComponent<PlayerController>().ClearContent(options);
+        Camera.main.GetComponent<PlayerController>().ClearContent(options.content);
 
         foreach (int option in dialog.options)
         {

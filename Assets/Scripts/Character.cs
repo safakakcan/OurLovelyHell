@@ -23,10 +23,13 @@ public class Character : Entity
     // Start is called before the first frame update
     void Start()
     {
-        for (int i = 0; i < Camera.main.GetComponent<PlayerController>().gameData.items.Count; i++)
+        for (int i = 0; i < 3; i++)
         {
             AddItemToInventory(new InventoryItem(i, 1));
         }
+
+        inventory[7] = new InventoryItem(0, 10);
+        inventory[8] = new InventoryItem(0, 10);
 
         equipments[0] = new InventoryItem(7, 1);
         equipments[1] = new InventoryItem(8, 1);
@@ -180,7 +183,7 @@ public class Character : Entity
         return quantity;
     }
 
-    public bool ConsumeItemFromInventory(InventoryItem item)
+    public bool ConsumeItemFromInventory(InventoryItem item, bool consume = true)
     {
         int quantity = item.quantity;
         bool available = false;
@@ -200,7 +203,7 @@ public class Character : Entity
             }
         }
 
-        if (available)
+        if (available && consume)
         {
             for (int i = 0; i < inventorySlotCount; i++)
             {
@@ -294,6 +297,11 @@ public class Character : Entity
                 }
             }
         }
+
+        Camera.main.GetComponent<PlayerController>().questViewer.Refresh();
+        var questPanel = GameObject.FindObjectOfType<Inventory>();
+        if (questPanel != null)
+            questPanel.Refresh();
     }
 
     public void OnTargetKilled(Entity target)

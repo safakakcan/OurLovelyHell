@@ -14,6 +14,8 @@ public class PlayerController : MonoBehaviour
     public GameObject popupPrefab;
     public GameObject modifierIconPrefab;
     public Transform modifierPanel;
+    public QuestViewer questViewer;
+    public GameObject questsPanelPrefab;
     public UnityEngine.UI.InputField username;
     public UnityEngine.UI.InputField password;
     public StickController stickController;
@@ -124,7 +126,6 @@ public class PlayerController : MonoBehaviour
 
         var window = Instantiate<GameObject>(windowPrefab);
         var inventory = Instantiate<GameObject>(inventoryPrefab);
-        inventory.GetComponent<Inventory>().Init();
         window.GetComponent<Window>().Init("Inventory", inventory.transform, 0.5f, 0.9f);
     }
 
@@ -135,8 +136,17 @@ public class PlayerController : MonoBehaviour
 
         var window = Instantiate<GameObject>(windowPrefab);
         var content = Instantiate<GameObject>(upgradePanelPrefab);
-        content.GetComponent<UpgradePanel>().Init();
         window.GetComponent<Window>().Init("Upgrade", content.transform, 0.75f, 0.75f);
+    }
+
+    public void ShowQuests()
+    {
+        if (GameObject.FindObjectOfType<QuestsPanel>() != null || character == null || busy)
+            return;
+
+        var window = Instantiate<GameObject>(windowPrefab);
+        var content = Instantiate<GameObject>(questsPanelPrefab);
+        window.GetComponent<Window>().Init("Quests", content.transform, 0.75f, 0.9f);
     }
 
     public void ShowPopup(string title, string text)
@@ -152,11 +162,11 @@ public class PlayerController : MonoBehaviour
         GameObject.FindGameObjectWithTag("GameController").GetComponent<NetworkController>().Login(username.text, password.text);
     }
 
-    public void ClearContent(UnityEngine.UI.ScrollRect rect)
+    public void ClearContent(Transform rect)
     {
-        for (int i = 0; i < rect.content.childCount; i++)
+        for (int i = 0; i < rect.childCount; i++)
         {
-            Destroy(rect.content.GetChild(i).gameObject);
+            Destroy(rect.GetChild(i).gameObject);
         }
     }
 }

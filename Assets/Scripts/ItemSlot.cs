@@ -19,6 +19,11 @@ public class ItemSlot : MonoBehaviour
     [HideInInspector]
     public InventoryItem[] array;
 
+    [HideInInspector]
+    public ItemSlot clone = null;
+    [HideInInspector]
+    public ItemSlot source = null;
+
     Transform draggingItem = null;
 
     // Start is called before the first frame update
@@ -59,6 +64,13 @@ public class ItemSlot : MonoBehaviour
             draggingItem.SetParent(transform);
             draggingItem.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
             draggingItem = null;
+
+            if (temporary)
+            {
+                source = null;
+                Refresh();
+                return;
+            }
         }
 
         var eventData = new UnityEngine.EventSystems.PointerEventData(UnityEngine.EventSystems.EventSystem.current);
@@ -88,6 +100,22 @@ public class ItemSlot : MonoBehaviour
                 if ((array[index].quantity == 0 || (itemData.itemType != ItemType.Equipment && slot.itemTypes.Contains(itemData.itemType)) || (slot.itemTypes.Contains(ItemType.Equipment) && itemData.itemType == ItemType.Equipment && slot.equipmentTypes.Contains(itemData.equipmentType))) &&
                     (slot.array[slot.index].quantity == 0 || (otherItemData.itemType != ItemType.Equipment && itemTypes.Contains(otherItemData.itemType)) || (itemTypes.Contains(ItemType.Equipment) && otherItemData.itemType == ItemType.Equipment && equipmentTypes.Contains(otherItemData.equipmentType))))
                 {
+                    if (slot.temporary)
+                    {
+                        if (clone != null)
+                        {
+                            clone.source = null;
+                            clone.Refresh();
+                            clone = null;
+                        }
+
+                        clone = slot;
+                        slot.source = this;
+                        slot.Refresh();
+                        Refresh();
+                        return;
+                    }
+
                     int otherIndex = slot.index;
                     var otherArray = slot.array;
                     int otherItem = slot.array[otherIndex].index;
@@ -107,12 +135,29 @@ public class ItemSlot : MonoBehaviour
                             array[index].quantity = otherTotal - otherItemData.stackSize;
                             otherArray[otherIndex].quantity = otherItemData.stackSize;
                         }
+
+                        if (slot.clone != null)
+                            slot.clone.Refresh();
                     }
                     else
                     {
                         otherArray[otherIndex] = array[index];
                         var item = new InventoryItem(otherItem, otherQuantity);
                         array[index] = item;
+
+                        if (slot.clone != null)
+                        {
+                            slot.clone.source = null;
+                            slot.clone.Refresh();
+                            slot.clone = null;
+                        }
+                    }
+
+                    if (clone != null)
+                    {
+                        clone.source = null;
+                        clone.Refresh();
+                        clone = null;
                     }
 
                     Refresh();
@@ -129,7 +174,7 @@ public class ItemSlot : MonoBehaviour
         if (transform.childCount > 0)
             Destroy(transform.GetChild(0).gameObject);
 
-        var itemData = array[index];
+        var itemData = temporary && source != null ? source.array[source.index] : array[index];
 
         if (itemData != null && itemData.quantity > 0)
         {
@@ -143,6 +188,10 @@ public class ItemSlot : MonoBehaviour
             item.transform.localPosition = Vector2.zero;
             item.transform.localRotation = Quaternion.identity;
             item.transform.localScale = Vector2.one;
+
+            item.GetComponent<UnityEngine.UI.Image>().color = new Color(item.GetComponent<UnityEngine.UI.Image>().color.r, item.GetComponent<UnityEngine.UI.Image>().color.g, item.GetComponent<UnityEngine.UI.Image>().color.b, clone == null ? 1 : 0.5f);
+            item.transform.GetChild(0).GetComponent<UnityEngine.UI.Image>().color = new Color(item.transform.GetChild(0).GetComponent<UnityEngine.UI.Image>().color.r, item.transform.GetChild(0).GetComponent<UnityEngine.UI.Image>().color.g, item.transform.GetChild(0).GetComponent<UnityEngine.UI.Image>().color.b, clone == null ? 1 : 0.75f);
+            item.transform.GetChild(1).GetComponent<UnityEngine.UI.Text>().color = new Color(item.transform.GetChild(1).GetComponent<UnityEngine.UI.Text>().color.r, item.transform.GetChild(1).GetComponent<UnityEngine.UI.Text>().color.g, item.transform.GetChild(1).GetComponent<UnityEngine.UI.Text>().color.b, clone == null ? 1 : 0.75f);
         }
 
         if (itemTypes.Count == 1 && itemTypes.Contains(ItemType.Equipment))

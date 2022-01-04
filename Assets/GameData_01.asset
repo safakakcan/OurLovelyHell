@@ -44,7 +44,6 @@ MonoBehaviour:
     status: 0
     startNPC: Grogo
     completeNPC: Grogo
-    rewards: []
   modifiers:
   - sprite: {fileID: 21300000, guid: 7ba131516ab11744db890a77c73ce992, type: 3}
     name: Wind Steps
