@@ -67,6 +67,8 @@ public class ItemSlot : MonoBehaviour
 
             if (temporary)
             {
+                source.clone = null;
+                source.Refresh();
                 source = null;
                 Refresh();
                 return;
@@ -82,7 +84,7 @@ public class ItemSlot : MonoBehaviour
             ItemSlot slot;
             if (result.gameObject.TryGetComponent<ItemSlot>(out slot))
             {
-                if ((slot.array == array && slot.index == index) || slot.locked || trash || array[index].quantity == 0)
+                if ((slot.array == array && slot.index == index) || slot.locked || trash || array[index].quantity == 0 || (slot.array == Camera.main.GetComponent<PlayerController>().character.equipments && Camera.main.GetComponent<PlayerController>().gameData.items[array[index].index].requiredLevel > Camera.main.GetComponent<PlayerController>().character.stats.level))
                     return;
 
                 if (slot.trash)
@@ -120,6 +122,8 @@ public class ItemSlot : MonoBehaviour
                     var otherArray = slot.array;
                     int otherItem = slot.array[otherIndex].index;
                     int otherQuantity = slot.array[otherIndex].quantity;
+                    float otherDurability = otherArray[otherIndex].durability;
+                    var otherSocket = otherArray[otherIndex].socket;
 
                     if (otherArray[otherIndex].index == array[index].index && otherQuantity < otherItemData.stackSize && array[index].quantity < itemData.stackSize)
                     {
@@ -129,11 +133,17 @@ public class ItemSlot : MonoBehaviour
                         {
                             array[index].quantity = 0;
                             otherArray[otherIndex].quantity = otherTotal;
+                            otherArray[otherIndex].durability = array[index].durability;
+                            otherArray[otherIndex].socket = array[index].socket;
                         }
                         else
                         {
                             array[index].quantity = otherTotal - otherItemData.stackSize;
                             otherArray[otherIndex].quantity = otherItemData.stackSize;
+                            otherArray[otherIndex].durability = array[index].durability;
+                            otherArray[otherIndex].socket = array[index].socket;
+                            array[index].durability = otherDurability;
+                            array[index].socket = otherSocket;
                         }
 
                         if (slot.clone != null)
@@ -144,6 +154,8 @@ public class ItemSlot : MonoBehaviour
                         otherArray[otherIndex] = array[index];
                         var item = new InventoryItem(otherItem, otherQuantity);
                         array[index] = item;
+                        array[index].durability = otherDurability;
+                        array[index].socket = otherSocket;
 
                         if (slot.clone != null)
                         {
@@ -169,7 +181,7 @@ public class ItemSlot : MonoBehaviour
         }
     }
 
-    public void Refresh()
+    public void Refresh(bool onServer = true)
     {
         if (transform.childCount > 0)
             Destroy(transform.GetChild(0).gameObject);
@@ -182,13 +194,13 @@ public class ItemSlot : MonoBehaviour
 
             var sprite = Sprite.Instantiate(Camera.main.GetComponent<PlayerController>().gameData.items[itemData.index].sprite);
             item.transform.GetChild(0).GetComponent<UnityEngine.UI.Image>().sprite = sprite;
-            item.transform.GetChild(1).GetComponent<UnityEngine.UI.Text>().text = itemData.quantity.ToString();
-
+            item.transform.GetChild(1).GetComponent<UnityEngine.UI.Text>().text = GameFormat.Quantity(itemData.quantity);
+            
             item.transform.SetParent(transform);
             item.transform.localPosition = Vector2.zero;
             item.transform.localRotation = Quaternion.identity;
             item.transform.localScale = Vector2.one;
-
+            
             item.GetComponent<UnityEngine.UI.Image>().color = new Color(item.GetComponent<UnityEngine.UI.Image>().color.r, item.GetComponent<UnityEngine.UI.Image>().color.g, item.GetComponent<UnityEngine.UI.Image>().color.b, clone == null ? 1 : 0.5f);
             item.transform.GetChild(0).GetComponent<UnityEngine.UI.Image>().color = new Color(item.transform.GetChild(0).GetComponent<UnityEngine.UI.Image>().color.r, item.transform.GetChild(0).GetComponent<UnityEngine.UI.Image>().color.g, item.transform.GetChild(0).GetComponent<UnityEngine.UI.Image>().color.b, clone == null ? 1 : 0.75f);
             item.transform.GetChild(1).GetComponent<UnityEngine.UI.Text>().color = new Color(item.transform.GetChild(1).GetComponent<UnityEngine.UI.Text>().color.r, item.transform.GetChild(1).GetComponent<UnityEngine.UI.Text>().color.g, item.transform.GetChild(1).GetComponent<UnityEngine.UI.Text>().color.b, clone == null ? 1 : 0.75f);
@@ -199,7 +211,7 @@ public class ItemSlot : MonoBehaviour
 
         Camera.main.GetComponent<PlayerController>().character.CheckQuest();
 
-        if (!temporary)
+        if (!temporary && onServer)
         {
             // Network
         }
@@ -211,7 +223,6 @@ public class ItemSlot : MonoBehaviour
             return;
 
         var info = Instantiate(Camera.main.GetComponent<PlayerController>().gameData.itemInfoPrefab, GameObject.FindGameObjectWithTag("Canvas").transform);
-        info.transform.GetChild(0).GetComponent<RectTransform>().position = transform.GetComponent<RectTransform>().position;
-        info.GetComponent<ItemInfo>().Init(array[index].index);
+        info.GetComponent<ItemInfo>().Init(this);
     }
 }

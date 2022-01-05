@@ -94,11 +94,13 @@ MonoBehaviour:
   trash: 0
   temporary: 0
   locked: 0
-  itemTypes: 000000000100000002000000
+  itemTypes: 000000000100000002000000030000000400000005000000
   equipmentTypes: 000000000100000002000000030000000400000005000000
   id: 
   index: 0
   array: []
+  clone: {fileID: 0}
+  source: {fileID: 0}
 --- !u!114 &4797535440232259505
 MonoBehaviour:
   m_ObjectHideFlags: 0

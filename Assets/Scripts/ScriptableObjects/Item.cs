@@ -15,16 +15,13 @@ public class Item : ScriptableObject
     public InventoryItem price = new InventoryItem(0, 1);
 
     [Header("Consumable")]
-    public float healthIncrease;
-    public float foodIncrease;
-    public float waterIncrease;
+    public string function;
 
     [Header("Equipment")]
     public GameObject equipmentPrefab;
     public EquipmentType equipmentType;
-    public EquipmentGrade equipmentGrade;
-    public float maxHealth;
-    public float health;
+    public EquipmentGrade grade;
+    public float maxDurability;
     public StatModifiers statModifiers;
 }
 
@@ -33,7 +30,10 @@ public enum ItemType
 {
     Collection,
     Consumable,
-    Equipment
+    Alchemy,
+    Equipment,
+    Crystal,
+    Quest
 }
 
 [System.Serializable]

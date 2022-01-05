@@ -10,20 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 37febad060a9e0244be8e88a7b52c103, type: 3}
-  m_Name: BronzeSword
+  m_Name: SoulStone
   m_EditorClassIdentifier: 
-  itemName: Bronze Sword
+  itemName: Soul Stone
   description: 
-  itemType: 3
-  sprite: {fileID: 21300000, guid: 287f52de831b24248b8d455dd460d11e, type: 3}
+  itemType: 2
+  sprite: {fileID: 21300000, guid: e7d29a79bc7fae248887c8a08a160303, type: 3}
   requiredLevel: 1
-  stackSize: 1
+  stackSize: 10
   price:
     index: 0
     quantity: 1
     durability: 100
   function: 
-  equipmentPrefab: {fileID: 7042985106782433366, guid: 5666d4eff353f5d4082e4e8cc559f91b, type: 3}
+  equipmentPrefab: {fileID: 0}
   equipmentType: 0
   maxDurability: 0
   statModifiers:
@@ -50,7 +50,7 @@ MonoBehaviour:
       amount: 0
     attack:
       type: 0
-      amount: 10
+      amount: 0
     defence:
       type: 0
       amount: 0
@@ -73,6 +73,6 @@ MonoBehaviour:
       type: 0
       amount: 0
     duration:
-      type: 1
+      type: 0
       amount: 0
     fx: {fileID: 0}

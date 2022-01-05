@@ -37,8 +37,8 @@ public class PlayerController : MonoBehaviour
         if (character == null || busy)
             return;
 
-        if (Input.GetKeyUp(KeyCode.U))
-            ShowUpgrade();
+        if (Input.GetKeyUp(KeyCode.C))
+            character.ConsumeItemFromInventory(new InventoryItem(0,2));
 
         hpbar.fillAmount = character.stats.health / character.stats.maxHealth;
 
@@ -136,7 +136,7 @@ public class PlayerController : MonoBehaviour
 
         var window = Instantiate<GameObject>(windowPrefab);
         var content = Instantiate<GameObject>(upgradePanelPrefab);
-        window.GetComponent<Window>().Init("Upgrade", content.transform, 0.75f, 0.75f);
+        window.GetComponent<Window>().Init("Upgrade", content.transform, 0.5f, 0.9f);
     }
 
     public void ShowQuests()
@@ -146,7 +146,7 @@ public class PlayerController : MonoBehaviour
 
         var window = Instantiate<GameObject>(windowPrefab);
         var content = Instantiate<GameObject>(questsPanelPrefab);
-        window.GetComponent<Window>().Init("Quests", content.transform, 0.75f, 0.9f);
+        window.GetComponent<Window>().Init("Quests", content.transform, 0.8f, 0.9f);
     }
 
     public void ShowPopup(string title, string text)
@@ -167,6 +167,29 @@ public class PlayerController : MonoBehaviour
         for (int i = 0; i < rect.childCount; i++)
         {
             Destroy(rect.GetChild(i).gameObject);
+        }
+    }
+}
+
+public static class GameFormat
+{
+    public static string Quantity(int quantity)
+    {
+        if (quantity >= 1000000000)
+        {
+            return (quantity / 1000000000f).ToString("n1") + "B";
+        }
+        else if (quantity >= 1000000)
+        {
+            return (quantity / 1000000f).ToString("n1") + "M";
+        }
+        else if (quantity >= 1000)
+        {
+            return (quantity / 1000f).ToString("n1") + "K";
+        }
+        else
+        {
+            return quantity.ToString();
         }
     }
 }

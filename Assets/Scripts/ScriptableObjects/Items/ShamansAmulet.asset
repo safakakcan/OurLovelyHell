@@ -14,18 +14,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Shaman's Amulet
   description: 
-  itemType: 2
+  itemType: 3
   sprite: {fileID: 21300000, guid: bb83b7fdc1b900b46805472bbdf503c2, type: 3}
+  requiredLevel: 1
   stackSize: 1
-  healthIncrease: 0
-  foodIncrease: 0
-  waterIncrease: 0
+  price:
+    index: 0
+    quantity: 1
+    durability: 100
+  function: 
   equipmentPrefab: {fileID: 4599195252064734256, guid: 74e3307bbbab89b44884c33b4c6838c6, type: 3}
   equipmentType: 1
-  maxHealth: 100
-  health: 100
+  maxDurability: 0
   statModifiers:
+    sprite: {fileID: 0}
     name: 
+    replacable: 0
+    exp:
+      type: 0
+      amount: 0
+    sp:
+      type: 0
+      amount: 0
     maxHealth:
       type: 0
       amount: 0
@@ -48,6 +58,18 @@ MonoBehaviour:
       type: 0
       amount: 0
     movementSpeed:
+      type: 0
+      amount: 0
+    expMultiplier:
+      type: 0
+      amount: 0
+    spMultiplier:
+      type: 0
+      amount: 0
+    dropMultiplier:
+      type: 0
+      amount: 0
+    chance:
       type: 0
       amount: 0
     duration:

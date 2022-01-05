@@ -34,6 +34,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: e80dcc2f1caeedf49a61926ae91078ee, type: 2}
   - {fileID: 11400000, guid: 2ae53e0894c407347bae8696b489e151, type: 2}
   - {fileID: 11400000, guid: 1e5435fdd75dc324b890633d86db0877, type: 2}
+  - {fileID: 11400000, guid: 078b5f59b4bc2ac4690ffc869f5c24e9, type: 2}
   quests:
   - name: Where are the beers?
     description: 

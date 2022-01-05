@@ -15,6 +15,7 @@ public class Entity : MonoBehaviour
     public int directionChange = 0;
     public Vector3 fixedPosition = Vector3.zero;
     public bool dead = false;
+    public Reward[] rewards;
 
     public int updateFrequency = 5;
     Coroutine update = null;

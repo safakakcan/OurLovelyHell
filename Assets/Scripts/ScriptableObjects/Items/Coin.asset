@@ -16,14 +16,17 @@ MonoBehaviour:
   description: 
   itemType: 0
   sprite: {fileID: 21300000, guid: 3676a0b185daeb54fb257f700ba7ead4, type: 3}
-  stackSize: 1000
-  healthIncrease: 0
-  foodIncrease: 0
-  waterIncrease: 0
+  requiredLevel: 1
+  stackSize: 1000000000
+  price:
+    index: 0
+    quantity: 1
+    durability: 100
+  function: 
   equipmentPrefab: {fileID: 0}
   equipmentType: 0
-  maxHealth: 0
-  health: 0
+  socketCount: 0
+  maxDurability: 0
   statModifiers:
     sprite: {fileID: 0}
     name: 

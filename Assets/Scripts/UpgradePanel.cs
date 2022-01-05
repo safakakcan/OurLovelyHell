@@ -38,4 +38,26 @@ public class UpgradePanel : MonoBehaviour
     {
 
     }
+
+    private void OnDestroy()
+    {
+        var equipmentSlot = transform.GetChild(0).GetChild(0).GetComponent<ItemSlot>();
+
+        if (equipmentSlot.source != null)
+        {
+            equipmentSlot.source.clone = null;
+            equipmentSlot.source.Refresh(false);
+        }
+
+        for (int i = 0; i < transform.GetChild(1).childCount; i++)
+        {
+            var slot = transform.GetChild(1).GetChild(i).GetComponent<ItemSlot>();
+
+            if (slot.source != null)
+            {
+                slot.source.clone = null;
+                slot.source.Refresh(false);
+            }
+        }
+    }
 }

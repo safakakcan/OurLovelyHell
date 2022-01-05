@@ -30,6 +30,7 @@ public class Character : Entity
 
         inventory[7] = new InventoryItem(0, 10);
         inventory[8] = new InventoryItem(0, 10);
+        inventory[9] = new InventoryItem(9, 1);
 
         equipments[0] = new InventoryItem(7, 1);
         equipments[1] = new InventoryItem(8, 1);
@@ -299,7 +300,7 @@ public class Character : Entity
         }
 
         Camera.main.GetComponent<PlayerController>().questViewer.Refresh();
-        var questPanel = GameObject.FindObjectOfType<Inventory>();
+        var questPanel = GameObject.FindObjectOfType<QuestsPanel>();
         if (questPanel != null)
             questPanel.Refresh();
     }

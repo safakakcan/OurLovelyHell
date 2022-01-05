@@ -14,6 +14,9 @@ public class GameData : ScriptableObject
     public GameObject itemInfoPrefab;
     public List<Item> items;
 
+    [Header("Sockets")]
+    public ItemSocket[] sockets;
+
     [Header("Quests")]
     public Quest[] quests;
 

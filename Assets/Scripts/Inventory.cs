@@ -71,13 +71,17 @@ public class Inventory : MonoBehaviour
 
                 var sprite = Sprite.Instantiate(Camera.main.GetComponent<PlayerController>().gameData.items[itemData.index].sprite);
                 item.transform.GetChild(0).GetComponent<UnityEngine.UI.Image>().sprite = sprite;
-                item.transform.GetChild(1).GetComponent<UnityEngine.UI.Text>().text = itemData.quantity.ToString();
+                item.transform.GetChild(1).GetComponent<UnityEngine.UI.Text>().text = GameFormat.Quantity(itemData.quantity);
 
                 item.transform.SetParent(equipments[i]);
                 item.transform.localPosition = Vector2.zero;
                 item.transform.localRotation = Quaternion.identity;
                 item.transform.localScale = Vector2.one;
             }
+
+            var slot = equipments[i].GetComponent<ItemSlot>();
+            if (slot.clone != null)
+                slot.clone.Refresh();
         }
 
         for (int i = 0; i < slots.Length; i++)
@@ -95,15 +99,44 @@ public class Inventory : MonoBehaviour
 
                 var sprite = Sprite.Instantiate(Camera.main.GetComponent<PlayerController>().gameData.items[itemData.index].sprite);
                 item.transform.GetChild(0).GetComponent<UnityEngine.UI.Image>().sprite = sprite;
-                item.transform.GetChild(1).GetComponent<UnityEngine.UI.Text>().text = itemData.quantity.ToString();
+                item.transform.GetChild(1).GetComponent<UnityEngine.UI.Text>().text = GameFormat.Quantity(itemData.quantity);
 
                 item.transform.SetParent(slots[i]);
                 item.transform.localPosition = Vector2.zero;
                 item.transform.localRotation = Quaternion.identity;
                 item.transform.localScale = Vector2.one;
             }
+
+            var slot = slots[i].GetComponent<ItemSlot>();
+            if (slot.clone != null)
+                slot.clone.Refresh();
         }
 
         Camera.main.GetComponent<PlayerController>().character.RefreshView();
+    }
+
+    private void OnDestroy()
+    {
+        for (int i = 0; i < equipments.Length; i++)
+        {
+            var slot = equipments[i].GetComponent<ItemSlot>();
+
+            if (slot.clone != null)
+            {
+                slot.clone.source = null;
+                slot.clone.Refresh();
+            }
+        }
+
+        for (int i = 0; i < slots.Length; i++)
+        {
+            var slot = slots[i].GetComponent<ItemSlot>();
+
+            if (slot.clone != null)
+            {
+                slot.clone.source = null;
+                slot.clone.Refresh();
+            }
+        }
     }
 }
