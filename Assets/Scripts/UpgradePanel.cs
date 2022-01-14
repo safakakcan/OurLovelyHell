@@ -36,7 +36,43 @@ public class UpgradePanel : MonoBehaviour
 
     public void UpgradeItem()
     {
+        var slot = transform.GetChild(0).GetChild(0).GetComponent<ItemSlot>();
+        if (slot.source == null)
+            return;
 
+        var item = slot.source.array[slot.source.index];
+        var itemData = Camera.main.GetComponent<PlayerController>().gameData.items[item.index];
+
+        if (itemData.grade.higherGradeIndex == -1 || itemData.grade.grade == Grade.Dark || item.quantity == 0)
+            return;
+
+        bool valid = true;
+        for (int i = 0; i < itemData.grade.recipe.Length; i++)
+        {
+            var recipeSlot = transform.GetChild(1).GetChild(i).GetComponent<ItemSlot>();
+            if (recipeSlot.array[recipeSlot.index].index != itemData.grade.recipe[i].index || recipeSlot.array[recipeSlot.index].quantity < itemData.grade.recipe[i].quantity)
+            {
+                valid = false;
+                break;
+            }
+        }
+
+        if (valid)
+        {
+            for (int i = 0; i < itemData.grade.recipe.Length; i++)
+            {
+                var recipeSlot = transform.GetChild(1).GetChild(i).GetComponent<ItemSlot>();
+                recipeSlot.array[recipeSlot.index].quantity -= itemData.grade.recipe[i].quantity;
+                recipeSlot.Refresh();
+            }
+
+            item.quantity--;
+            var newItem = new InventoryItem(itemData.grade.higherGradeIndex, 1);
+            newItem.durability = Camera.main.GetComponent<PlayerController>().gameData.items[itemData.grade.higherGradeIndex].maxDurability;
+            newItem.socket = item.socket;
+
+            Camera.main.GetComponent<PlayerController>().character.AddItemToInventory(newItem);
+        }
     }
 
     private void OnDestroy()

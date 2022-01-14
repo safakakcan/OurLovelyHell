@@ -38,7 +38,7 @@ public class QuestViewer : MonoBehaviour
                 if (quest.status == EQuestStatus.Started)
                 {
                     var questEntry = Instantiate<GameObject>(questEntryPrefab, rect.content);
-                    questEntry.transform.GetChild(0).GetChild(0).GetComponent<Text>().text = questData.name;
+                    questEntry.transform.GetChild(0).GetChild(0).GetComponent<Text>().text = questData.questName;
                     questEntry.GetComponent<QuestEntry>().index = q;
 
                     for (int i = 0; i < quest.progress.Length; i++)

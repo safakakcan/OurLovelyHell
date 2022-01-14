@@ -21,7 +21,7 @@ public class QuestToggle : MonoBehaviour
     public void Init(int _index)
     {
         index = _index;
-        transform.GetChild(1).GetComponent<UnityEngine.UI.Text>().text = Camera.main.GetComponent<PlayerController>().gameData.quests[index].name;
+        transform.GetChild(1).GetComponent<UnityEngine.UI.Text>().text = Camera.main.GetComponent<PlayerController>().gameData.quests[index].questName;
         transform.GetChild(2).GetComponent<UnityEngine.UI.Toggle>().SetIsOnWithoutNotify(Camera.main.GetComponent<PlayerController>().character.quests[index].show);
     }
 
@@ -30,6 +30,10 @@ public class QuestToggle : MonoBehaviour
         if (GetComponent<UnityEngine.UI.Toggle>().isOn)
         {
             GameObject.FindObjectOfType<QuestsPanel>().ShowQuestInfo(index);
+        }
+        else
+        {
+            GameObject.FindObjectOfType<QuestsPanel>().transform.GetChild(1).GetChild(0).gameObject.SetActive(false);
         }
     }
 

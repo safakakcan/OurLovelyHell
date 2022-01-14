@@ -89,7 +89,7 @@ public class DialogPanel : MonoBehaviour
             for (var i = 0; i < questData[q.index].conditions.Length; i++)
             {
                 var c = questData[q.index].conditions[i];
-                if (questData[q.index].status == EQuestStatus.Started && c.condition == EQuestCondition.Dialog && c.target == name && c.amount == currentDialogIndex)
+                if (q.status == EQuestStatus.Started && c.condition == EQuestCondition.Dialog && c.target == name && c.amount == currentDialogIndex)
                 {
                     q.progress[i]++;
                     check = true;

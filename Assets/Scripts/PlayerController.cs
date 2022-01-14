@@ -162,11 +162,11 @@ public class PlayerController : MonoBehaviour
         GameObject.FindGameObjectWithTag("GameController").GetComponent<NetworkController>().Login(username.text, password.text);
     }
 
-    public void ClearContent(Transform rect)
+    public void ClearContent(Transform parent)
     {
-        for (int i = 0; i < rect.childCount; i++)
+        for (int i = 0; i < parent.childCount; i++)
         {
-            Destroy(rect.GetChild(i).gameObject);
+            Destroy(parent.GetChild(i).gameObject);
         }
     }
 }

@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37febad060a9e0244be8e88a7b52c103, type: 3}
+  m_Name: BronzeSword
+  m_EditorClassIdentifier: 
+  itemName: Bronze Sword
+  description: 
+  itemType: 3
+  sprite: {fileID: 21300000, guid: 287f52de831b24248b8d455dd460d11e, type: 3}
+  requiredLevel: 1
+  stackSize: 1
+  price:
+    index: 0
+    quantity: 1
+  function: 
+  equipmentPrefab: {fileID: 7042985106782433366, guid: 5666d4eff353f5d4082e4e8cc559f91b, type: 3}
+  equipmentType: 0
+  grade:
+    grade: 1
+    lowerGradeIndex: -1
+    higherGradeIndex: 11
+    recipe: []
+  maxDurability: 100
+  statModifier: {fileID: 0}

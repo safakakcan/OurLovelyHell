@@ -55,7 +55,7 @@ public class QuestsPanel : MonoBehaviour
         var quest = Camera.main.GetComponent<PlayerController>().character.quests[index];
         var questData = Camera.main.GetComponent<PlayerController>().gameData.quests[quest.index];
 
-        transform.GetChild(1).GetChild(0).GetChild(0).GetComponent<Text>().text = questData.name;
+        transform.GetChild(1).GetChild(0).GetChild(0).GetComponent<Text>().text = questData.questName;
         transform.GetChild(1).GetChild(0).GetChild(1).GetComponent<Text>().text = questData.description;
         transform.GetChild(1).GetChild(0).GetChild(3).GetComponent<Text>().text = string.Format("Status: {0}", quest.status.ToString());
         transform.GetChild(1).GetChild(0).GetChild(4).GetComponent<Text>().text = string.Format("Start NPC: {0}", questData.startNPC);

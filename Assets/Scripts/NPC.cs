@@ -8,6 +8,7 @@ public class NPC : MonoBehaviour
     public float interactDistance = 3;
     public Transform cameraSocket;
     public Dialog[] dialogs;
+    public NPCShop shop;
 
     // Start is called before the first frame update
     void Start()
@@ -67,16 +68,6 @@ public class NPC : MonoBehaviour
     }
 }
 
-[System.Serializable]
-public class Quest
-{
-    public string name;
-    public string description;
-    public QuestCondition[] conditions;
-    public EQuestStatus status;
-    public string startNPC;
-    public string completeNPC;
-}
 
 [System.Serializable]
 public class QuestData
@@ -91,33 +82,6 @@ public class QuestData
         index = _index;
         status = _status;
     }
-}
-
-[System.Serializable]
-public enum EQuestStatus
-{
-    Unavailable,
-    Available,
-    Started,
-    Completed,
-    Given
-}
-
-[System.Serializable]
-public enum EQuestCondition
-{
-    Dialog,
-    Bring,
-    Kill,
-    Explore,
-}
-
-[System.Serializable]
-public class QuestCondition
-{
-    public EQuestCondition condition;
-    public string target;
-    public int amount;
 }
 
 [System.Serializable]
@@ -183,13 +147,15 @@ public class DialogCondition
     public int requiredLevel;
 }
 
+[System.Serializable]
 public class NPCShop
 {
     public NPCShopItem[] items;
 }
 
+[System.Serializable]
 public class NPCShopItem
 {
-    public int index;
-    public InventoryItem price;
+    public InventoryItem item;
+    public ItemQuantity price;
 }

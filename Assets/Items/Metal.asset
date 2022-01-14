@@ -1,0 +1,78 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37febad060a9e0244be8e88a7b52c103, type: 3}
+  m_Name: Metal
+  m_EditorClassIdentifier: 
+  itemName: Metal
+  description: 
+  itemType: 0
+  sprite: {fileID: 21300000, guid: dc817aaa85e19f144b9ab0db70940399, type: 3}
+  requiredLevel: 1
+  stackSize: 20
+  price:
+    index: 0
+    quantity: 1
+    durability: 100
+  function: 
+  equipmentPrefab: {fileID: 0}
+  equipmentType: 0
+  maxDurability: 1
+  statModifiers:
+    sprite: {fileID: 0}
+    name: 
+    replacable: 0
+    exp:
+      type: 0
+      amount: 0
+    sp:
+      type: 0
+      amount: 0
+    maxHealth:
+      type: 0
+      amount: 0
+    health:
+      type: 0
+      amount: 0
+    maxStamina:
+      type: 0
+      amount: 0
+    stamina:
+      type: 0
+      amount: 0
+    attack:
+      type: 0
+      amount: 0
+    defence:
+      type: 0
+      amount: 0
+    skillSpeed:
+      type: 0
+      amount: 0
+    movementSpeed:
+      type: 0
+      amount: 0
+    expMultiplier:
+      type: 0
+      amount: 0
+    spMultiplier:
+      type: 0
+      amount: 0
+    dropMultiplier:
+      type: 0
+      amount: 0
+    chance:
+      type: 0
+      amount: 0
+    duration:
+      type: 0
+      amount: 0
+    fx: {fileID: 0}

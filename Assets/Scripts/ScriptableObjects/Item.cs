@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Item", menuName = "Inventory/Item")]
+[CreateAssetMenu(fileName = "New Item", menuName = "Game/Item")]
 public class Item : ScriptableObject
 {
     [Header("General")]
@@ -12,7 +12,7 @@ public class Item : ScriptableObject
     public Sprite sprite;
     public int requiredLevel = 1;
     public int stackSize = 1;
-    public InventoryItem price = new InventoryItem(0, 1);
+    public ItemQuantity price = new ItemQuantity(0, 1);
 
     [Header("Consumable")]
     public string function;
@@ -21,8 +21,8 @@ public class Item : ScriptableObject
     public GameObject equipmentPrefab;
     public EquipmentType equipmentType;
     public EquipmentGrade grade;
-    public float maxDurability;
-    public StatModifiers statModifiers;
+    public float maxDurability = 1;
+    public StatModifier statModifier;
 }
 
 [System.Serializable]
@@ -47,6 +47,7 @@ public enum EquipmentType
     Feet
 }
 
+[System.Serializable]
 public enum Grade
 {
     Dark,
@@ -60,10 +61,11 @@ public enum Grade
     Deified
 }
 
+[System.Serializable]
 public class EquipmentGrade
 {
     public Grade grade = Grade.Normal;
     public int lowerGradeIndex = -1;
     public int higherGradeIndex = -1;
-    public InventoryItem[] recipe;
+    public ItemQuantity[] recipe;
 }

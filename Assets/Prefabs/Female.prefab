@@ -2568,70 +2568,101 @@ MonoBehaviour:
   directionChange: 0
   fixedPosition: {x: 0, y: 0, z: 0}
   dead: 0
+  rewards: []
   updateFrequency: 5
   inventorySlotCount: 10
   equipments:
   - index: 0
     quantity: 0
+    durability: 0
   - index: 0
     quantity: 0
+    durability: 0
   - index: 0
     quantity: 0
+    durability: 0
   - index: 0
     quantity: 0
+    durability: 0
   - index: 0
     quantity: 0
+    durability: 0
   - index: 0
     quantity: 0
+    durability: 0
   inventory:
   - index: 0
     quantity: 0
+    durability: 0
   - index: 0
     quantity: 0
+    durability: 0
   - index: 0
     quantity: 0
+    durability: 0
   - index: 0
     quantity: 0
+    durability: 0
   - index: 0
     quantity: 0
+    durability: 0
   - index: 0
     quantity: 0
+    durability: 0
   - index: 0
     quantity: 0
+    durability: 0
   - index: 0
     quantity: 0
+    durability: 0
   - index: 0
     quantity: 0
+    durability: 0
   - index: 0
     quantity: 0
+    durability: 0
   - index: 0
     quantity: 0
+    durability: 0
   - index: 0
     quantity: 0
+    durability: 0
   - index: 0
     quantity: 0
+    durability: 0
   - index: 0
     quantity: 0
+    durability: 0
   - index: 0
     quantity: 0
+    durability: 0
   - index: 0
     quantity: 0
+    durability: 0
   - index: 0
     quantity: 0
+    durability: 0
   - index: 0
     quantity: 0
+    durability: 0
   - index: 0
     quantity: 0
+    durability: 0
   - index: 0
     quantity: 0
+    durability: 0
   - index: 0
     quantity: 0
+    durability: 0
   - index: 0
     quantity: 0
+    durability: 0
   - index: 0
     quantity: 0
+    durability: 0
   - index: 0
     quantity: 0
+    durability: 0
   quests: []
   handR_Socket: {fileID: 6209444870571434704}
   handL_Socket: {fileID: 6209444870477795628}

@@ -29,10 +29,11 @@ public class Entity : MonoBehaviour
     // Update is called once per frame
     public virtual void Update()
     {
+        var totalStats = TotalStats();
         GetComponent<Animator>().SetFloat("Velocity", speed);
         GetComponent<Animator>().SetFloat("Direction", direction);
-        GetComponent<Animator>().SetFloat("SkillSpeed", TotalStats().skillSpeed);
-        GetComponent<Animator>().SetFloat("MovementSpeed", TotalStats().movementSpeed);
+        GetComponent<Animator>().SetFloat("SkillSpeed", totalStats.skillSpeed);
+        GetComponent<Animator>().SetFloat("MovementSpeed", totalStats.movementSpeed);
 
 
         if (Mathf.Abs(directionChange) != 0)
@@ -168,14 +169,14 @@ public class Entity : MonoBehaviour
     {
         Stats s = new Stats();
 
-        s.attack += stats.attack;
-        s.defence += stats.defence;
-        s.maxHealth += stats.maxHealth;
-        s.health += stats.health;
-        s.maxStamina += stats.stamina;
-        s.stamina += stats.stamina;
-        s.movementSpeed += stats.movementSpeed;
-        s.skillSpeed += stats.skillSpeed;
+        s.attack = stats.attack;
+        s.defence = stats.defence;
+        s.maxHealth = stats.maxHealth;
+        s.health = stats.health;
+        s.maxStamina = stats.stamina;
+        s.stamina = stats.stamina;
+        s.movementSpeed = stats.movementSpeed;
+        s.skillSpeed = stats.skillSpeed;
 
         foreach (var modifierData in statModifiers)
         {
@@ -285,78 +286,6 @@ public class Stats
     public float spMultiplier = 1;
     public float dropMultiplier = 1;
     public float chance = 1;
-}
-
-[System.Serializable]
-public class StatModifiers
-{
-    public Sprite sprite;
-    public string name;
-    public bool replacable;
-    public Modifier exp;
-    public Modifier sp;
-    public Modifier maxHealth;
-    public Modifier health;
-    public Modifier maxStamina;
-    public Modifier stamina;
-    public Modifier attack;
-    public Modifier defence;
-    public Modifier skillSpeed;
-    public Modifier movementSpeed;
-    //public Modifier accuracy;
-    //public Modifier evasion;
-    public Modifier expMultiplier;
-    public Modifier spMultiplier;
-    public Modifier dropMultiplier;
-    public Modifier chance;
-    public Duration duration;
-    public GameObject fx;
-
-    public bool CountDown()
-    {
-        if (duration.type == EDurationType.Limited)
-        {
-            duration.amount -= Time.deltaTime;
-            return duration.amount > 0;
-        }
-        else
-        {
-            return true;
-        }
-    }
-}
-
-public interface IInteractable
-{
-    public string Interact();
-}
-
-[System.Serializable]
-public class Modifier
-{
-    public EModifierType type;
-    public float amount;
-}
-
-[System.Serializable]
-public enum EModifierType
-{
-    Sum,
-    Multiply
-}
-
-[System.Serializable]
-public enum EDurationType
-{
-    Limited,
-    Unlimited
-}
-
-[System.Serializable]
-public class Duration
-{
-    public EDurationType type;
-    public float amount;
 }
 
 [System.Serializable]

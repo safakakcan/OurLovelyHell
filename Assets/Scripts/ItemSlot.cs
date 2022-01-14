@@ -186,6 +186,7 @@ public class ItemSlot : MonoBehaviour
         if (transform.childCount > 0)
             Destroy(transform.GetChild(0).gameObject);
 
+        var slot = temporary && source != null ? source : this;
         var itemData = temporary && source != null ? source.array[source.index] : array[index];
 
         if (itemData != null && itemData.quantity > 0)
@@ -206,7 +207,7 @@ public class ItemSlot : MonoBehaviour
             item.transform.GetChild(1).GetComponent<UnityEngine.UI.Text>().color = new Color(item.transform.GetChild(1).GetComponent<UnityEngine.UI.Text>().color.r, item.transform.GetChild(1).GetComponent<UnityEngine.UI.Text>().color.g, item.transform.GetChild(1).GetComponent<UnityEngine.UI.Text>().color.b, clone == null ? 1 : 0.75f);
         }
 
-        if (itemTypes.Count == 1 && itemTypes.Contains(ItemType.Equipment))
+        if (slot.itemTypes.Count == 1 && slot.itemTypes.Contains(ItemType.Equipment))
             Camera.main.GetComponent<PlayerController>().character.RefreshView();
 
         Camera.main.GetComponent<PlayerController>().character.CheckQuest();

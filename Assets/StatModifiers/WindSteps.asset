@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35da6c49798833a41b0db96bc9506a74, type: 3}
+  m_Name: WindSteps
+  m_EditorClassIdentifier: 
+  sprite: {fileID: 21300000, guid: 7ba131516ab11744db890a77c73ce992, type: 3}
+  modifierName: Wind Steps
+  replacable: 1
+  exp:
+    type: 0
+    amount: 0
+  sp:
+    type: 0
+    amount: 0
+  maxHealth:
+    type: 0
+    amount: 0
+  health:
+    type: 0
+    amount: 0
+  maxStamina:
+    type: 0
+    amount: 0
+  stamina:
+    type: 0
+    amount: 0
+  attack:
+    type: 0
+    amount: 0
+  defence:
+    type: 0
+    amount: 0
+  skillSpeed:
+    type: 0
+    amount: 0
+  movementSpeed:
+    type: 1
+    amount: 2
+  expMultiplier:
+    type: 0
+    amount: 0
+  spMultiplier:
+    type: 0
+    amount: 0
+  dropMultiplier:
+    type: 0
+    amount: 0
+  chance:
+    type: 0
+    amount: 0
+  duration:
+    type: 0
+    amount: 150
+  fx: {fileID: 0}

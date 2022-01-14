@@ -23,14 +23,11 @@ public class Character : Entity
     // Start is called before the first frame update
     void Start()
     {
-        for (int i = 0; i < 3; i++)
-        {
-            AddItemToInventory(new InventoryItem(i, 1));
-        }
-
-        inventory[7] = new InventoryItem(0, 10);
-        inventory[8] = new InventoryItem(0, 10);
-        inventory[9] = new InventoryItem(9, 1);
+        inventory[0] = new InventoryItem(0, 952);
+        inventory[1] = new InventoryItem(0, 765);
+        inventory[2] = new InventoryItem(10, 1);
+        inventory[3] = new InventoryItem(9, 1);
+        inventory[4] = new InventoryItem(9, 1);
 
         equipments[0] = new InventoryItem(7, 1);
         equipments[1] = new InventoryItem(8, 1);
@@ -55,14 +52,14 @@ public class Character : Entity
     {
         Stats s = new Stats();
 
-        s.attack += stats.attack;
-        s.defence += stats.defence;
-        s.maxHealth += stats.maxHealth;
-        s.health += stats.health;
-        s.maxStamina += stats.stamina;
-        s.stamina += stats.stamina;
-        s.movementSpeed += stats.movementSpeed;
-        s.skillSpeed += stats.skillSpeed;
+        s.attack = stats.attack;
+        s.defence = stats.defence;
+        s.maxHealth = stats.maxHealth;
+        s.health = stats.health;
+        s.maxStamina = stats.stamina;
+        s.stamina = stats.stamina;
+        s.movementSpeed = stats.movementSpeed;
+        s.skillSpeed = stats.skillSpeed;
 
         foreach (var modifierData in statModifiers)
         {
@@ -80,16 +77,19 @@ public class Character : Entity
 
         foreach (var e in equipments)
         {
-            var modifier = Camera.main.GetComponent<PlayerController>().gameData.items[e.index].statModifiers;
-            s.attack = modifier.attack.type == EModifierType.Multiply ? s.attack * modifier.attack.amount : s.attack + modifier.attack.amount;
-            s.defence = modifier.defence.type == EModifierType.Multiply ? s.defence * modifier.defence.amount : s.defence + modifier.defence.amount;
-            s.maxHealth = modifier.maxHealth.type == EModifierType.Multiply ? s.maxHealth * modifier.maxHealth.amount : s.maxHealth + modifier.maxHealth.amount;
-            s.maxStamina = modifier.maxStamina.type == EModifierType.Multiply ? s.maxStamina * modifier.maxStamina.amount : s.maxStamina + modifier.maxStamina.amount;
-            s.movementSpeed = modifier.movementSpeed.type == EModifierType.Multiply ? s.movementSpeed * modifier.movementSpeed.amount : s.movementSpeed + modifier.movementSpeed.amount;
-            s.skillSpeed = modifier.skillSpeed.type == EModifierType.Multiply ? s.skillSpeed * modifier.skillSpeed.amount : s.skillSpeed + modifier.skillSpeed.amount;
-            s.expMultiplier = modifier.expMultiplier.type == EModifierType.Multiply ? s.expMultiplier * modifier.expMultiplier.amount : s.expMultiplier + modifier.expMultiplier.amount;
-            s.spMultiplier = modifier.spMultiplier.type == EModifierType.Multiply ? s.spMultiplier * modifier.spMultiplier.amount : s.spMultiplier + modifier.spMultiplier.amount;
-            s.chance = modifier.chance.type == EModifierType.Multiply ? s.chance * modifier.chance.amount : s.chance + modifier.chance.amount;
+            var modifier = Camera.main.GetComponent<PlayerController>().gameData.items[e.index].statModifier;
+            if (e.quantity > 0 && modifier != null)
+            {
+                s.attack = modifier.attack.type == EModifierType.Multiply ? s.attack * modifier.attack.amount : s.attack + modifier.attack.amount;
+                s.defence = modifier.defence.type == EModifierType.Multiply ? s.defence * modifier.defence.amount : s.defence + modifier.defence.amount;
+                s.maxHealth = modifier.maxHealth.type == EModifierType.Multiply ? s.maxHealth * modifier.maxHealth.amount : s.maxHealth + modifier.maxHealth.amount;
+                s.maxStamina = modifier.maxStamina.type == EModifierType.Multiply ? s.maxStamina * modifier.maxStamina.amount : s.maxStamina + modifier.maxStamina.amount;
+                s.movementSpeed = modifier.movementSpeed.type == EModifierType.Multiply ? s.movementSpeed * modifier.movementSpeed.amount : s.movementSpeed + modifier.movementSpeed.amount;
+                s.skillSpeed = modifier.skillSpeed.type == EModifierType.Multiply ? s.skillSpeed * modifier.skillSpeed.amount : s.skillSpeed + modifier.skillSpeed.amount;
+                s.expMultiplier = modifier.expMultiplier.type == EModifierType.Multiply ? s.expMultiplier * modifier.expMultiplier.amount : s.expMultiplier + modifier.expMultiplier.amount;
+                s.spMultiplier = modifier.spMultiplier.type == EModifierType.Multiply ? s.spMultiplier * modifier.spMultiplier.amount : s.spMultiplier + modifier.spMultiplier.amount;
+                s.chance = modifier.chance.type == EModifierType.Multiply ? s.chance * modifier.chance.amount : s.chance + modifier.chance.amount;
+            }
         }
 
         return s;
@@ -161,6 +161,8 @@ public class Character : Entity
             else if (inventory[i].quantity == 0)
             {
                 inventory[i].index = item.index;
+                inventory[i].durability = item.durability;
+                inventory[i].socket = item.socket;
 
                 if (quantity > gameData.items[item.index].stackSize)
                 {
@@ -247,12 +249,12 @@ public class Character : Entity
             quests.Add(newQuest);
             newQuest.progress = new int[qData.conditions.Length];
             CheckQuest();
-            Camera.main.GetComponent<PlayerController>().ShowPopup("Quest: " + newQuest.status.ToString(), "\"" + qData.name + "\"");
+            Camera.main.GetComponent<PlayerController>().ShowPopup("Quest: " + newQuest.status.ToString(), "\"" + qData.questName + "\"");
         }
         else if (quest.status != newQuest.status)
         {
             quest.status = newQuest.status;
-            Camera.main.GetComponent<PlayerController>().ShowPopup("Quest: " + newQuest.status.ToString(), "\"" + qData.name + "\"");
+            Camera.main.GetComponent<PlayerController>().ShowPopup("Quest: " + newQuest.status.ToString(), "\"" + qData.questName + "\"");
         }
     }
 
@@ -332,11 +334,8 @@ public class Character : Entity
 
     public void RefreshView()
     {
-        if (handR_Socket.childCount > 0)
-            Destroy(handR_Socket.GetChild(0).gameObject);
-
-        if (handL_Socket.childCount > 0)
-            Destroy(handL_Socket.GetChild(0).gameObject);
+        Camera.main.GetComponent<PlayerController>().ClearContent(handR_Socket);
+        Camera.main.GetComponent<PlayerController>().ClearContent(handL_Socket);
 
         if (equipments[0].quantity > 0)
         {

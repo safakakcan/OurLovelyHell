@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New GameData", menuName = "GameData")]
+[CreateAssetMenu(fileName = "New GameData", menuName = "Game/Data")]
 public class GameData : ScriptableObject
 {
     [Header("Effects")]
@@ -12,14 +12,11 @@ public class GameData : ScriptableObject
     [Header("Items")]
     public GameObject itemPrefab;
     public GameObject itemInfoPrefab;
-    public List<Item> items;
-
-    [Header("Sockets")]
-    public ItemSocket[] sockets;
+    public Item[] items;
 
     [Header("Quests")]
     public Quest[] quests;
 
     [Header("Modifiers")]
-    public StatModifiers[] modifiers;
+    public StatModifier[] modifiers;
 }

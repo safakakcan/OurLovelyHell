@@ -10,22 +10,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 37febad060a9e0244be8e88a7b52c103, type: 3}
-  m_Name: SoulStone
+  m_Name: Club
   m_EditorClassIdentifier: 
-  itemName: Soul Stone
+  itemName: Club
   description: 
-  itemType: 2
-  sprite: {fileID: 21300000, guid: e7d29a79bc7fae248887c8a08a160303, type: 3}
+  itemType: 0
+  sprite: {fileID: 21300000, guid: 7c40a5054feb38649a0e94edad5f5aa0, type: 3}
   requiredLevel: 1
-  stackSize: 10
+  stackSize: 1
   price:
     index: 0
     quantity: 1
     durability: 100
   function: 
-  equipmentPrefab: {fileID: 0}
+  equipmentPrefab: {fileID: 5196156311166394542, guid: 3179078912754114fab3dba097a92e44, type: 3}
   equipmentType: 0
-  maxDurability: 0
+  maxDurability: 1
   statModifiers:
     sprite: {fileID: 0}
     name: 

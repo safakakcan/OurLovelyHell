@@ -35,63 +35,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 2ae53e0894c407347bae8696b489e151, type: 2}
   - {fileID: 11400000, guid: 1e5435fdd75dc324b890633d86db0877, type: 2}
   - {fileID: 11400000, guid: 078b5f59b4bc2ac4690ffc869f5c24e9, type: 2}
+  - {fileID: 11400000, guid: f263357e021c5de48b1671c9ab3a1760, type: 2}
+  - {fileID: 11400000, guid: 1199a2fe7dd6ab54398447f5e3aa42fd, type: 2}
   quests:
-  - name: Where are the beers?
-    description: 
-    conditions:
-    - condition: 1
-      target: Beer
-      amount: 1
-    status: 0
-    startNPC: Grogo
-    completeNPC: Grogo
+  - {fileID: 11400000, guid: 83ff60f0c9153c046bf2446d0fd58079, type: 2}
   modifiers:
-  - sprite: {fileID: 21300000, guid: 7ba131516ab11744db890a77c73ce992, type: 3}
-    name: Wind Steps
-    replacable: 1
-    exp:
-      type: 0
-      amount: 0
-    sp:
-      type: 0
-      amount: 0
-    maxHealth:
-      type: 0
-      amount: 0
-    health:
-      type: 0
-      amount: 0
-    maxStamina:
-      type: 0
-      amount: 0
-    stamina:
-      type: 0
-      amount: 0
-    attack:
-      type: 0
-      amount: 0
-    defence:
-      type: 0
-      amount: 0
-    skillSpeed:
-      type: 0
-      amount: 0
-    movementSpeed:
-      type: 1
-      amount: 2
-    expMultiplier:
-      type: 0
-      amount: 0
-    spMultiplier:
-      type: 0
-      amount: 0
-    dropMultiplier:
-      type: 0
-      amount: 0
-    chance:
-      type: 0
-      amount: 0
-    duration:
-      type: 0
-      amount: 90
-    fx: {fileID: 0}
+  - {fileID: 11400000, guid: 169e2542251e7b14b8ee3883e9c88c0b, type: 2}
