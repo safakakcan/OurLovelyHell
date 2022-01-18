@@ -116,6 +116,7 @@ public class NetworkController : MonoBehaviour
     public void JoinGame(NetworkData data)
     {
         GetComponent<UConnect>().SendRequest("JoinGame", "World");
+        Camera.main.GetComponent<PlayerController>().mainMenu.SetActive(false);
     }
 
     public void LoadGame(NetworkData data)
@@ -142,7 +143,7 @@ public class NetworkController : MonoBehaviour
 
         string charName = "Player_" + (Random.Range(100000, 999999).ToString());
         Camera.main.name = charName;
-        GetComponent<UConnect>().CallEvent("CreateCharacter", charName, "1", "0", "-2");
+        GetComponent<UConnect>().CallEvent("SpawnCharacter", charName, "1", "0", "-2");
     }
 
     public void SpawnCharacter(NetworkData data)

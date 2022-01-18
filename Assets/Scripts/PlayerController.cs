@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
     public Transform modifierPanel;
     public QuestViewer questViewer;
     public GameObject questsPanelPrefab;
+    public GameObject mainMenu;
     public UnityEngine.UI.InputField username;
     public UnityEngine.UI.InputField password;
     public StickController stickController;
