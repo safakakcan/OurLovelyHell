@@ -143,7 +143,8 @@ public class NetworkController : MonoBehaviour
 
         string charName = "Player_" + (Random.Range(100000, 999999).ToString());
         Camera.main.name = charName;
-        GetComponent<UConnect>().CallEvent("SpawnCharacter", charName, "1", "0", "-2");
+        Vector3 pos = GameObject.FindGameObjectWithTag("SpawnPoint").transform.position;
+        GetComponent<UConnect>().CallEvent("SpawnCharacter", charName, pos.x.ToString(), pos.y.ToString(), pos.z.ToString());
     }
 
     public void SpawnCharacter(NetworkData data)
