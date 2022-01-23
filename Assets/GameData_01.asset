@@ -12,6 +12,81 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5a50dd38f2895a459983ed940daf654, type: 3}
   m_Name: GameData_01
   m_EditorClassIdentifier: 
+  expByLevel:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.5
+      inSlope: -0.12167328
+      outSlope: -0.12167328
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.20159152
+    - serializedVersion: 3
+      time: 10
+      value: 0.01
+      inSlope: -0.0009999991
+      outSlope: -0.0009999991
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 40
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.08841731
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  expByLevelDifference:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: -5
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0
+      value: 0.8
+      inSlope: 0.099999994
+      outSlope: 0.099999994
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 3
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 6
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   skillSounds:
   - {fileID: 8300000, guid: d3c475794fe601c4b8551c6a33195bbc, type: 3}
   - {fileID: 8300000, guid: ae3380e7c16812b4abbc61e132525622, type: 3}
@@ -20,8 +95,10 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 07fbff69ee2b57a44909e4e42b10e706, type: 3}
   - {fileID: 8300000, guid: 52acf07340aa3f94682ed2bc5a671451, type: 3}
   slashFX:
-  - {fileID: 1891112893759320291, guid: e12470b7ad0e0f541a35fef3ba87ad0a, type: 3}
   - {fileID: 618023441762310615, guid: dfbbe0c8ea774a54a8e6b3d46107f003, type: 3}
+  - {fileID: 1891112893759320291, guid: e12470b7ad0e0f541a35fef3ba87ad0a, type: 3}
+  damageText: {fileID: 1763615975645915019, guid: 0b1e57b8606382d47b64470ad5b59768, type: 3}
+  hitFX: {fileID: 3937490889268779891, guid: 045fd60f2e481b646b1f5a4662da787c, type: 3}
   itemPrefab: {fileID: 1906168158931725983, guid: a003c06c48603624d857b070634d954d, type: 3}
   itemInfoPrefab: {fileID: 2504280929862071924, guid: 05e5f52fbb576b749b35b8a1eead878c, type: 3}
   items:

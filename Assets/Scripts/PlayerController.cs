@@ -21,7 +21,12 @@ public class PlayerController : MonoBehaviour
     public UnityEngine.UI.InputField password;
     public StickController stickController;
     public Drag dragPad;
+    public UnityEngine.UI.Text playerName;
+    public UnityEngine.UI.Text level;
+    public UnityEngine.UI.Image exp;
+    public UnityEngine.UI.Text sp;
     public UnityEngine.UI.Image hpbar;
+    public UnityEngine.UI.Image staminabar;
     public float lookX = 15;
     public float zoom = -2.5f;
     public bool busy = false;
@@ -41,7 +46,12 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.C))
             character.ConsumeItemFromInventory(new InventoryItem(0,2));
 
+        playerName.text = character.displayName;
+        level.text = "Lv " + character.stats.level.ToString();
+        exp.fillAmount = character.stats.exp;
+        sp.text = character.stats.sp.ToString();
         hpbar.fillAmount = character.stats.health / character.stats.maxHealth;
+        staminabar.fillAmount = character.stats.stamina / character.stats.maxStamina;
 
         int speedChange;
         int directionChange;

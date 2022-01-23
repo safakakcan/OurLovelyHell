@@ -5,9 +5,15 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New GameData", menuName = "Game/Data")]
 public class GameData : ScriptableObject
 {
+    [Header("Curves")]
+    public AnimationCurve expByLevel;
+    public AnimationCurve expByLevelDifference;
+
     [Header("Effects")]
     public AudioClip[] skillSounds;
     public GameObject[] slashFX;
+    public GameObject damageText;
+    public GameObject hitFX;
 
     [Header("Items")]
     public GameObject itemPrefab;

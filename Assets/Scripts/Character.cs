@@ -121,18 +121,20 @@ public class Character : Entity
     {
         if (authority)
         {
-            RaycastHit hit;
-            if (Physics.Raycast(transform.position + transform.up, transform.TransformDirection(Vector3.forward), out hit, 2))
+            var colliders = Physics.OverlapSphere(transform.TransformPoint(new Vector3(0, 1, 2f)), 2);
+            
+            foreach (var collider in colliders)
             {
+                if (collider.name == name)
+                    continue;
+
                 Entity entity;
-                if (hit.collider.gameObject.TryGetComponent<Entity>(out entity))
+                if (collider.gameObject.TryGetComponent<Entity>(out entity))
                 {
-                    Camera.main.GetComponent<UConnect>().CallEvent("send", "World", "ApplyDamage", name, entity.name, 
-                        (e.floatParameter * (TotalStats().attack / TotalStats().defence) * Random.Range(0.9f, 1.1f)).ToString("n2"));
+                    int damage = (int)(e.floatParameter * (TotalStats().attack / TotalStats().defence) * Random.Range(0.9f, 1.1f) * stats.level);
+                    FindObjectOfType<UConnect>().CallEvent("send", "World", "ApplyDamage", name, entity.name, damage.ToString());
                 }
             }
-
-            Debug.DrawRay(transform.position + transform.up, transform.TransformDirection(Vector3.forward) * 2, Color.red, 2);
         }
     }
 
@@ -309,6 +311,26 @@ public class Character : Entity
 
     public void OnTargetKilled(Entity target)
     {
+        var gameData = Camera.main.GetComponent<PlayerController>().gameData;
+        float exp = target.expReward * gameData.expByLevelDifference.Evaluate(target.stats.level - stats.level) * gameData.expByLevel.Evaluate(stats.level);
+        AddExp(exp);
+
+        foreach (var reward in target.rewards)
+        {
+            if (reward.type == ERewardType.Item)
+            {
+                AddItemToInventory(new InventoryItem(reward.index, reward.amount));
+            }
+            else if (reward.type == ERewardType.Quest)
+            {
+                UpdateQuest(new QuestData(reward.index, (EQuestStatus)reward.amount));
+
+            }
+            else if (reward.type == ERewardType.Modifier)
+            {
+                AddModifier(new ModifierData(reward.index));
+            }
+        }
 
         bool check = false;
 
@@ -319,7 +341,7 @@ public class Character : Entity
                 for (var i = 0; i < Camera.main.GetComponent<PlayerController>().gameData.quests[quest.index].conditions.Length; i++)
                 {
                     var condition = Camera.main.GetComponent<PlayerController>().gameData.quests[quest.index].conditions[i];
-                    if (condition.condition == EQuestCondition.Kill && condition.target == target.name)
+                    if (condition.condition == EQuestCondition.Kill && condition.target == target.displayName)
                     {
                         quest.progress[i]++;
                         check = true;

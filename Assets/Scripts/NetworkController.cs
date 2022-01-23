@@ -23,7 +23,7 @@ public class NetworkController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        entities.AddRange(FindObjectsOfType<Entity>());
     }
 
     // Update is called once per frame
@@ -70,7 +70,7 @@ public class NetworkController : MonoBehaviour
 
             if (entity != null)
             {
-                if (Camera.main.name != entity.name)
+                if (!entity.authority)
                 {
                     entity.speedChange = int.Parse(values[1]);
                     entity.directionChange = int.Parse(values[2]);
@@ -93,7 +93,7 @@ public class NetworkController : MonoBehaviour
 
         if (entity != null)
         {
-            if (Camera.main.name != entity.name)
+            if (!entity.authority)
             {
                 entity.speedChange = int.Parse(data.array[2]);
                 entity.directionChange = int.Parse(data.array[3]);
@@ -154,6 +154,7 @@ public class NetworkController : MonoBehaviour
         character.transform.position = new Vector3(float.Parse(data.array[2]), float.Parse(data.array[3]), float.Parse(data.array[4]));
         character.transform.rotation = Quaternion.Euler(new Vector3(0, float.Parse(data.array[5]), 0));
         character.name = data.array[1];
+        character.GetComponent<Entity>().displayName = data.array[1];
 
         if (Camera.main.name == character.name)
         {
@@ -186,8 +187,20 @@ public class NetworkController : MonoBehaviour
             entity.GetComponent<Animator>().SetTrigger(data.array[1]);
     }
 
-    public void ApplyDamage()
+    public void ApplyDamage(NetworkData data)
     {
-
+        Entity causer = (from e in entities where e.name == data.array[1] select e).FirstOrDefault();
+        Entity entity = (from e in entities where e.name == data.array[2] select e).FirstOrDefault();
+        int damage = int.Parse(data.array[3]);
+        
+        Character character = null;
+        if (causer.gameObject.TryGetComponent<Character>(out character))
+        {
+            entity.ApplyDamage(damage, character);
+        }
+        else
+        {
+            entity.ApplyDamage(damage);
+        }
     }
 }

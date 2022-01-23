@@ -5,6 +5,7 @@ using System.Linq;
 
 public class Entity : MonoBehaviour
 {
+    public string displayName = "Entity";
     public bool authority = false;
     public Stats stats = new Stats();
     public List<ModifierData> statModifiers;
@@ -15,7 +16,9 @@ public class Entity : MonoBehaviour
     public int directionChange = 0;
     public Vector3 fixedPosition = Vector3.zero;
     public bool dead = false;
+    public AudioClip hitSound;
     public Reward[] rewards;
+    public float expReward = 1;
 
     public int updateFrequency = 5;
     Coroutine update = null;
@@ -23,7 +26,7 @@ public class Entity : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        fixedPosition = transform.position;
     }
 
     // Update is called once per frame
@@ -119,7 +122,7 @@ public class Entity : MonoBehaviour
 
     public virtual void FixedUpdate()
     {
-        if (Vector3.Distance(transform.position, fixedPosition) > 0.1f && Camera.main.name != name)
+        if (Vector3.Distance(transform.position, fixedPosition) > 0.1f && !authority)
         {
             if (Vector3.Distance(transform.position, fixedPosition) < 4)
             {
@@ -157,7 +160,7 @@ public class Entity : MonoBehaviour
         
         var pos = (Vector2)Camera.main.WorldToScreenPoint(transform.position + (transform.up * 2));
         pos.y = Screen.height - pos.y;
-        GUI.Label(new Rect(pos + new Vector2(-200, -50), new Vector2(400, 50)), "<color=white>" + name + "</color>", style);
+        GUI.Label(new Rect(pos + new Vector2(-200, -50), new Vector2(400, 50)), "<color=white>" + displayName + "</color>", style);
     }
 
     public void Init()
@@ -230,15 +233,61 @@ public class Entity : MonoBehaviour
         }
     }
 
-    public void ApplyDamage(float damage)
+    public void AddExp(float value)
     {
-        stats.health -= damage / (stats.defence + 1);
+        stats.exp += value * stats.expMultiplier;
+
+        bool levelUp = false;
+
+        while (true)
+        {
+            if (stats.exp >= 1)
+            {
+                stats.exp -= 1;
+                stats.level++;
+                levelUp = true;
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        if (levelUp)
+        {
+            Camera.main.GetComponent<PlayerController>().ShowPopup("LEVEL UP !", string.Format("You have reached level {0}.", stats.level));
+        }
+    }
+
+    public void ApplyDamage(int damage, Character causer = null)
+    {
+        if (dead)
+            return;
+
+        stats.health -= damage;
 
         if (stats.health < 0)
         {
             stats.health = 0;
-            Die();
+            dead = true;
+
+            if (causer != null)
+                causer.OnTargetKilled(this);
         }
+
+        GetComponent<AudioSource>().PlayOneShot(hitSound);
+
+        var fx = Instantiate<GameObject>(Camera.main.GetComponent<PlayerController>().gameData.hitFX);
+        fx.transform.position = GetComponent<Renderer>().bounds.center;
+
+        var text = Instantiate<GameObject>(Camera.main.GetComponent<PlayerController>().gameData.damageText);
+        text.transform.position = GetComponent<Renderer>().bounds.center;
+        text.transform.GetChild(0).GetComponent<TextMesh>().text = damage.ToString();
+        var source = new UnityEngine.Animations.ConstraintSource();
+        source.sourceTransform = Camera.main.transform;
+        source.weight = 1;
+        text.transform.GetChild(0).GetComponent<UnityEngine.Animations.LookAtConstraint>().AddSource(source);
+        Destroy(text, 1);
     }
 
     public void Restore(float value)
@@ -249,11 +298,6 @@ public class Entity : MonoBehaviour
             if (stats.health > stats.maxHealth)
                 stats.health = stats.maxHealth;
         }
-    }
-
-    public void Die()
-    {
-        dead = true;
     }
 
     IEnumerator UpdateNetwork()
@@ -276,12 +320,12 @@ public class Stats
     public float health = 100;
     public float maxStamina = 100;
     public float stamina = 100;
-    public float attack = 0;
-    public float defence = 0;
-    public float skillSpeed = 0;
-    public float movementSpeed = 0;
-    //public float accuracy = 0;
-    //public float evasion = 0;
+    public float attack = 1;
+    public float defence = 1;
+    public float skillSpeed = 1;
+    public float movementSpeed = 1;
+    //public float accuracy = 1;
+    //public float evasion = 1;
     public float expMultiplier = 1;
     public float spMultiplier = 1;
     public float dropMultiplier = 1;
