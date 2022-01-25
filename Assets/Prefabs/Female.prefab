@@ -2544,6 +2544,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92b2683f260335045a6a1405ad02bf6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  displayName: Player
   authority: 0
   stats:
     level: 1
@@ -2568,101 +2569,164 @@ MonoBehaviour:
   directionChange: 0
   fixedPosition: {x: 0, y: 0, z: 0}
   dead: 0
+  hitSound: {fileID: 8300000, guid: a8057925371fa2341b3a28890a3d9e6d, type: 3}
   rewards: []
+  expReward: 1
   updateFrequency: 5
+  bodyRenderer: {fileID: 5563310128725117528}
   inventorySlotCount: 10
   equipments:
   - index: 0
     quantity: 0
     durability: 0
+    socket:
+      index: 0
   - index: 0
     quantity: 0
     durability: 0
+    socket:
+      index: 0
   - index: 0
     quantity: 0
     durability: 0
+    socket:
+      index: 0
   - index: 0
     quantity: 0
     durability: 0
+    socket:
+      index: 0
   - index: 0
     quantity: 0
     durability: 0
+    socket:
+      index: 0
   - index: 0
     quantity: 0
     durability: 0
+    socket:
+      index: 0
   inventory:
   - index: 0
     quantity: 0
     durability: 0
+    socket:
+      index: 0
   - index: 0
     quantity: 0
     durability: 0
+    socket:
+      index: 0
   - index: 0
     quantity: 0
     durability: 0
+    socket:
+      index: 0
   - index: 0
     quantity: 0
     durability: 0
+    socket:
+      index: 0
   - index: 0
     quantity: 0
     durability: 0
+    socket:
+      index: 0
   - index: 0
     quantity: 0
     durability: 0
+    socket:
+      index: 0
   - index: 0
     quantity: 0
     durability: 0
+    socket:
+      index: 0
   - index: 0
     quantity: 0
     durability: 0
+    socket:
+      index: 0
   - index: 0
     quantity: 0
     durability: 0
+    socket:
+      index: 0
   - index: 0
     quantity: 0
     durability: 0
+    socket:
+      index: 0
   - index: 0
     quantity: 0
     durability: 0
+    socket:
+      index: 0
   - index: 0
     quantity: 0
     durability: 0
+    socket:
+      index: 0
   - index: 0
     quantity: 0
     durability: 0
+    socket:
+      index: 0
   - index: 0
     quantity: 0
     durability: 0
+    socket:
+      index: 0
   - index: 0
     quantity: 0
     durability: 0
+    socket:
+      index: 0
   - index: 0
     quantity: 0
     durability: 0
+    socket:
+      index: 0
   - index: 0
     quantity: 0
     durability: 0
+    socket:
+      index: 0
   - index: 0
     quantity: 0
     durability: 0
+    socket:
+      index: 0
   - index: 0
     quantity: 0
     durability: 0
+    socket:
+      index: 0
   - index: 0
     quantity: 0
     durability: 0
+    socket:
+      index: 0
   - index: 0
     quantity: 0
     durability: 0
+    socket:
+      index: 0
   - index: 0
     quantity: 0
     durability: 0
+    socket:
+      index: 0
   - index: 0
     quantity: 0
     durability: 0
+    socket:
+      index: 0
   - index: 0
     quantity: 0
     durability: 0
+    socket:
+      index: 0
   quests: []
   handR_Socket: {fileID: 6209444870571434704}
   handL_Socket: {fileID: 6209444870477795628}

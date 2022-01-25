@@ -11,7 +11,7 @@ Material:
   m_Shader: {fileID: -6465566751694194690, guid: e9f5dcdb2a6339d4da7d2584dca246bb, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
+  m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -129,9 +129,9 @@ Material:
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _DeepWaterColor: {r: 0, g: 0.057298362, b: 0.6886792, a: 1}
+    - _DeepWaterColor: {r: 0.2950338, g: 0.33260328, b: 0.735849, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _ShallowWaterColor: {r: 0, g: 0.04743781, b: 0.5566038, a: 0.1254902}
+    - _ShallowWaterColor: {r: 0.5943396, g: 0.5943396, b: 0.5943396, a: 0.1254902}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []
 --- !u!114 &3929202753645364231

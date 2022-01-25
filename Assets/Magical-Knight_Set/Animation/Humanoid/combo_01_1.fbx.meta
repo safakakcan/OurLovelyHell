@@ -480,6 +480,13 @@ ModelImporter:
         floatParameter: 45
         intParameter: 4
         messageOptions: 0
+      - time: 0.4
+        functionName: Hit
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 10
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}

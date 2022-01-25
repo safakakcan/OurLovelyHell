@@ -168,6 +168,11 @@ public class PlayerController : MonoBehaviour
         Destroy(popup, 5);
     }
 
+    public void ShowEntityInfo(Entity entity)
+    {
+
+    }
+
     public void Login()
     {
         GameObject.FindGameObjectWithTag("GameController").GetComponent<NetworkController>().Login(username.text, password.text);

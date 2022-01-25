@@ -22,6 +22,7 @@ public class Entity : MonoBehaviour
 
     public int updateFrequency = 5;
     Coroutine update = null;
+    public Renderer bodyRenderer;
 
     // Start is called before the first frame update
     void Start()
@@ -118,6 +119,22 @@ public class Entity : MonoBehaviour
                 i++;
             }
         }
+        else
+        {
+            var i = 0;
+            while (i < statModifiers.Count)
+            {
+                var modifier = statModifiers[i];
+
+                if (!modifier.CountDown())
+                {
+                    statModifiers.RemoveAt(i);
+                    continue;
+                }
+
+                i++;
+            }
+        }
     }
 
     public virtual void FixedUpdate()
@@ -137,6 +154,9 @@ public class Entity : MonoBehaviour
 
     private void OnGUI()
     {
+        if (dead)
+            return;
+
         var eventData = new UnityEngine.EventSystems.PointerEventData(UnityEngine.EventSystems.EventSystem.current);
         eventData.position = (Vector2)Camera.main.WorldToScreenPoint(transform.position + (transform.up * 2));
         List<UnityEngine.EventSystems.RaycastResult> results = new List<UnityEngine.EventSystems.RaycastResult>();
@@ -160,7 +180,7 @@ public class Entity : MonoBehaviour
         
         var pos = (Vector2)Camera.main.WorldToScreenPoint(transform.position + (transform.up * 2));
         pos.y = Screen.height - pos.y;
-        GUI.Label(new Rect(pos + new Vector2(-200, -50), new Vector2(400, 50)), "<color=white>" + displayName + "</color>", style);
+        GUI.Label(new Rect(pos + new Vector2(-200, bodyRenderer.bounds.max.y - 50), new Vector2(400, 50)), "<color=orange>" + displayName + "</color>", style);
     }
 
     public void Init()
@@ -253,7 +273,7 @@ public class Entity : MonoBehaviour
             }
         }
 
-        if (levelUp)
+        if (levelUp && name == Camera.main.name)
         {
             Camera.main.GetComponent<PlayerController>().ShowPopup("LEVEL UP !", string.Format("You have reached level {0}.", stats.level));
         }
@@ -270,7 +290,8 @@ public class Entity : MonoBehaviour
         {
             stats.health = 0;
             dead = true;
-
+            GetComponent<Animator>().SetBool("Death", true);
+            
             if (causer != null)
                 causer.OnTargetKilled(this);
         }
@@ -278,10 +299,10 @@ public class Entity : MonoBehaviour
         GetComponent<AudioSource>().PlayOneShot(hitSound);
 
         var fx = Instantiate<GameObject>(Camera.main.GetComponent<PlayerController>().gameData.hitFX);
-        fx.transform.position = GetComponent<Renderer>().bounds.center;
+        fx.transform.position = bodyRenderer == null ? transform.position : bodyRenderer.bounds.center;
 
         var text = Instantiate<GameObject>(Camera.main.GetComponent<PlayerController>().gameData.damageText);
-        text.transform.position = GetComponent<Renderer>().bounds.center;
+        text.transform.position = bodyRenderer == null ? transform.position : bodyRenderer.bounds.center;
         text.transform.GetChild(0).GetComponent<TextMesh>().text = damage.ToString();
         var source = new UnityEngine.Animations.ConstraintSource();
         source.sourceTransform = Camera.main.transform;

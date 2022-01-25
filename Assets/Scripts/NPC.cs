@@ -9,6 +9,7 @@ public class NPC : MonoBehaviour
     public Transform cameraSocket;
     public Dialog[] dialogs;
     public NPCShop shop;
+    public Renderer bodyRenderer;
 
     // Start is called before the first frame update
     void Start()
@@ -47,7 +48,7 @@ public class NPC : MonoBehaviour
 
         var pos = (Vector2)Camera.main.WorldToScreenPoint(transform.position + (transform.up * 2));
         pos.y = Screen.height - pos.y;
-        GUI.Label(new Rect(pos + new Vector2(-200, -50), new Vector2(400, 50)), "<color=yellow>" + name + "</color>", style);
+        GUI.Label(new Rect(pos + new Vector2(-200, bodyRenderer.bounds.max.y - 50), new Vector2(400, 50)), "<color=yellow>" + name + "</color>", style);
     }
 
     public void OpenDialog()

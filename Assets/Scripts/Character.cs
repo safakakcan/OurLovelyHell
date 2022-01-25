@@ -5,6 +5,10 @@ using System.Linq;
 
 public class Character : Entity
 {
+    [Header("Social")]
+    public string partyId = "";
+    public string clan = "";
+
     [Header("Slots")]
     public int inventorySlotCount = 10;
     public InventoryItem[] equipments = new InventoryItem[6];
@@ -121,7 +125,9 @@ public class Character : Entity
     {
         if (authority)
         {
-            var colliders = Physics.OverlapSphere(transform.TransformPoint(new Vector3(0, 1, 2f)), 2);
+            //var colliders = Physics.OverlapSphere(transform.TransformPoint(new Vector3(0, 1, 2f)), 2);
+            var colliders = Physics.OverlapSphere(GetComponent<Entity>().bodyRenderer.bounds.center + transform.TransformDirection(Vector3.forward * 2), 2);
+            Entity target = null;
             
             foreach (var collider in colliders)
             {
@@ -131,8 +137,18 @@ public class Character : Entity
                 Entity entity;
                 if (collider.gameObject.TryGetComponent<Entity>(out entity))
                 {
-                    int damage = (int)(e.floatParameter * (TotalStats().attack / TotalStats().defence) * Random.Range(0.9f, 1.1f) * stats.level);
-                    FindObjectOfType<UConnect>().CallEvent("send", "World", "ApplyDamage", name, entity.name, damage.ToString());
+                    if (!entity.dead)
+                    {
+                        int damage = (int)(e.floatParameter * (TotalStats().attack / entity.TotalStats().defence) * Random.Range(0.9f, 1.1f) * (1 + (stats.level * 0.1f)));
+                        FindObjectOfType<UConnect>().CallEvent("send", "World", "ApplyDamage", name, entity.name, damage.ToString());
+
+                        if (target == null && name == Camera.main.name)
+                        {
+                            target = entity;
+                            Camera.main.GetComponent<PlayerController>().ShowEntityInfo(target);
+                            Camera.main.GetComponent<Animator>().SetTrigger("Shake");
+                        }
+                    }
                 }
             }
         }
@@ -369,4 +385,18 @@ public class Character : Entity
             Instantiate(Camera.main.GetComponent<PlayerController>().gameData.items[equipments[1].index].equipmentPrefab, handL_Socket);
         }
     }
+}
+
+public enum ECareerType
+{
+    Fisher,
+    Farmer,
+    Miner,
+    Alchemist
+}
+
+public class Career
+{
+    public ECareerType careerType;
+    public float progress;
 }
