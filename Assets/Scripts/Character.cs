@@ -125,7 +125,6 @@ public class Character : Entity
     {
         if (authority)
         {
-            //var colliders = Physics.OverlapSphere(transform.TransformPoint(new Vector3(0, 1, 2f)), 2);
             var colliders = Physics.OverlapSphere(GetComponent<Entity>().bodyRenderer.bounds.center + transform.TransformDirection(Vector3.forward * 2), 2);
             Entity target = null;
             
@@ -141,7 +140,7 @@ public class Character : Entity
                     {
                         int damage = (int)(e.floatParameter * (TotalStats().attack / entity.TotalStats().defence) * Random.Range(0.9f, 1.1f) * (1 + (stats.level * 0.1f)));
                         FindObjectOfType<UConnect>().CallEvent("send", "World", "ApplyDamage", name, entity.name, damage.ToString());
-
+                        
                         if (target == null && name == Camera.main.name)
                         {
                             target = entity;

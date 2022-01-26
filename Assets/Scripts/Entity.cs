@@ -15,6 +15,8 @@ public class Entity : MonoBehaviour
     public int speedChange = 0;
     public int directionChange = 0;
     public Vector3 fixedPosition = Vector3.zero;
+    public float positionFixingSpeed = 2;
+    public float wrapDistance = 4;
     public bool dead = false;
     public AudioClip hitSound;
     public Reward[] rewards;
@@ -33,11 +35,15 @@ public class Entity : MonoBehaviour
     // Update is called once per frame
     public virtual void Update()
     {
-        var totalStats = TotalStats();
-        GetComponent<Animator>().SetFloat("Velocity", speed);
-        GetComponent<Animator>().SetFloat("Direction", direction);
-        GetComponent<Animator>().SetFloat("SkillSpeed", totalStats.skillSpeed);
-        GetComponent<Animator>().SetFloat("MovementSpeed", totalStats.movementSpeed);
+        Animator animator;
+        if (TryGetComponent<Animator>(out animator))
+        {
+            var totalStats = TotalStats();
+            animator.SetFloat("Velocity", speed);
+            animator.SetFloat("Direction", direction);
+            animator.SetFloat("SkillSpeed", totalStats.skillSpeed);
+            animator.SetFloat("MovementSpeed", totalStats.movementSpeed);
+        }
 
 
         if (Mathf.Abs(directionChange) != 0)
@@ -139,15 +145,15 @@ public class Entity : MonoBehaviour
 
     public virtual void FixedUpdate()
     {
-        if (Vector3.Distance(transform.position, fixedPosition) > 0.1f && !authority)
+        if (Vector3.Distance(transform.localPosition, fixedPosition) > 0.1f && !authority)
         {
-            if (Vector3.Distance(transform.position, fixedPosition) < 4)
+            if (Vector3.Distance(transform.localPosition, fixedPosition) < wrapDistance)
             {
-                transform.position = Vector3.MoveTowards(transform.position, fixedPosition, Time.deltaTime * 2);
+                transform.localPosition = Vector3.MoveTowards(transform.localPosition, fixedPosition, Time.deltaTime * positionFixingSpeed);
             }
             else
             {
-                transform.position = fixedPosition;
+                transform.localPosition = fixedPosition;
             }
         }
     }
@@ -290,7 +296,10 @@ public class Entity : MonoBehaviour
         {
             stats.health = 0;
             dead = true;
-            GetComponent<Animator>().SetBool("Death", true);
+
+            Animator animator;
+            if (TryGetComponent<Animator>(out animator))
+                GetComponent<Animator>().SetBool("Death", true);
             
             if (causer != null)
                 causer.OnTargetKilled(this);
@@ -324,7 +333,7 @@ public class Entity : MonoBehaviour
     IEnumerator UpdateNetwork()
     {
         GameObject.FindGameObjectWithTag("GameController").GetComponent<UConnect>().CallEvent("Move", name, speedChange.ToString(), directionChange.ToString(),
-                transform.position.x.ToString("n2"), transform.position.y.ToString("n2"), transform.position.z.ToString("n2"), transform.rotation.eulerAngles.y.ToString("n2"));
+                transform.localPosition.x.ToString("n2"), transform.localPosition.y.ToString("n2"), transform.localPosition.z.ToString("n2"), transform.rotation.eulerAngles.y.ToString("n2"), transform.root.name == name ? "" : transform.root.name);
         
         yield return new WaitForSeconds((1 / updateFrequency));
         update = null;

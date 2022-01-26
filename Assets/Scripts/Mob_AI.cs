@@ -33,8 +33,8 @@ public class Mob_AI : MonoBehaviour
                 behaviour = StartCoroutine(Behaviour());
             }
 
-            var t = GetComponent<UnityEngine.AI.NavMeshAgent>().steeringTarget;
-            var lookPos = t - transform.position;
+            //var t = GetComponent<UnityEngine.AI.NavMeshAgent>().steeringTarget;
+            var lookPos = destination - transform.position;
             lookPos.y = 0;
 
             if (lookPos != Vector3.zero)
@@ -63,7 +63,7 @@ public class Mob_AI : MonoBehaviour
             if (Random.Range(0f, 1f) > 0.5f)
             {
                 destination = spawnPoint + new Vector3(Random.Range(-habitatRadius, habitatRadius), Random.Range(-habitatRadius, habitatRadius), Random.Range(-habitatRadius, habitatRadius));
-                GetComponent<UnityEngine.AI.NavMeshAgent>().SetDestination(destination);
+                //GetComponent<UnityEngine.AI.NavMeshAgent>().SetDestination(destination);
                 GetComponent<Entity>().speedChange = 1;
             }
             else
@@ -75,7 +75,7 @@ public class Mob_AI : MonoBehaviour
         else
         {
             destination = target.transform.position;
-            GetComponent<UnityEngine.AI.NavMeshAgent>().SetDestination(destination);
+            //GetComponent<UnityEngine.AI.NavMeshAgent>().SetDestination(destination);
 
             if (Vector3.Distance(transform.position, destination) < attackDistance)
             {

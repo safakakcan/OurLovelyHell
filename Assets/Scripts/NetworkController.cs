@@ -33,7 +33,6 @@ public class NetworkController : MonoBehaviour
         {
             pingDetect = StartCoroutine(Ping());
         }
-        
     }
 
     IEnumerator Ping()
@@ -56,35 +55,7 @@ public class NetworkController : MonoBehaviour
         }
 
         pingDetect = null;
-        pingText.text = "Ping: " + GameObject.FindGameObjectWithTag("GameController").GetComponent<NetworkController>().ping.ToString();
-    }
-
-    public void UpdateTransforms(NetworkData data)
-    {
-        string[] updatedTransforms = data.array[1].Split(';');
-
-        foreach (string updatedTransform in updatedTransforms)
-        {
-            string[] values = updatedTransform.Split('|');
-            Entity entity = (from e in entities where e.name == values[0] select e).FirstOrDefault();
-
-            if (entity != null)
-            {
-                if (!entity.authority)
-                {
-                    entity.speedChange = int.Parse(values[1]);
-                    entity.directionChange = int.Parse(values[2]);
-                    entity.transform.rotation = Quaternion.Euler(new Vector3(0, float.Parse(values[6]), 0));
-                }
-                
-                var pos = new Vector3(float.Parse(values[3]), float.Parse(values[4]), float.Parse(values[5]));
-                entity.fixedPosition = pos;
-            }
-            else
-            {
-                Debug.Log("ENTITY NOT FOUND: " + values[0]);
-            }
-        }
+        pingText.text = "FPS: " + ((int)(1 / Time.deltaTime)).ToString() + " | Ping: " + GameObject.FindGameObjectWithTag("GameController").GetComponent<NetworkController>().ping.ToString();
     }
 
     public void Move(NetworkData data)
@@ -97,8 +68,19 @@ public class NetworkController : MonoBehaviour
             {
                 entity.speedChange = int.Parse(data.array[2]);
                 entity.directionChange = int.Parse(data.array[3]);
-                entity.transform.rotation = Quaternion.Euler(new Vector3(0, float.Parse(data.array[7]), 0));
                 var pos = new Vector3(float.Parse(data.array[4]), float.Parse(data.array[5]), float.Parse(data.array[6]));
+                var rot = Quaternion.Euler(new Vector3(0, float.Parse(data.array[7]), 0));
+
+                if (data.array[8] == "" && entity.transform.parent != null)
+                {
+                    entity.transform.parent = null;
+                }
+                else if (entity.transform.root.name != data.array[8])
+                {
+                    entity.transform.parent = (from ship in entities where ship.name == data.array[8] select ship.GetComponent<Ship>().board).FirstOrDefault();
+                }
+
+                entity.transform.rotation = rot;
                 entity.fixedPosition = pos;
             }
         }
@@ -129,29 +111,50 @@ public class NetworkController : MonoBehaviour
                 string[] values = character.Split('|');
                 var c = Instantiate<GameObject>(characterPrefab);
                 entities.Add(c.GetComponent<Entity>());
-
+                
                 c.name = values[0];
+                c.GetComponent<Entity>().displayName = c.name;
                 c.GetComponent<Entity>().speedChange = int.Parse(values[1]);
                 c.GetComponent<Entity>().directionChange = int.Parse(values[2]);
-                c.transform.position = new Vector3(float.Parse(values[3]), float.Parse(values[4]), float.Parse(values[5]));
+
+                if (values[7] == "" && c.transform.parent != null)
+                {
+                    c.transform.parent = null;
+                }
+                else if (c.transform.root.name != values[7])
+                {
+                    c.transform.parent = (from ship in entities where ship.name == values[7] select ship.GetComponent<Ship>().board).FirstOrDefault();
+                }
+
+                c.transform.localPosition = new Vector3(float.Parse(values[3]), float.Parse(values[4]), float.Parse(values[5]));
                 c.transform.rotation = Quaternion.Euler(new Vector3(0, float.Parse(values[6]), 0));
                 
                 c.GetComponent<Entity>().Init();
                 Debug.Log("Spawn: " + values[0]);
             }
         }
-
+        
         string charName = "Player_" + (Random.Range(100000, 999999).ToString());
         Camera.main.name = charName;
         Vector3 pos = GameObject.FindGameObjectWithTag("SpawnPoint").transform.position;
-        GetComponent<UConnect>().CallEvent("SpawnCharacter", charName, pos.x.ToString(), pos.y.ToString(), pos.z.ToString());
+        GetComponent<UConnect>().CallEvent("SpawnCharacter", charName, pos.x.ToString(), pos.y.ToString(), pos.z.ToString(), "");
     }
 
     public void SpawnCharacter(NetworkData data)
     {
         var character = Instantiate<GameObject>(characterPrefab);
         entities.Add(character.GetComponent<Entity>());
-        character.transform.position = new Vector3(float.Parse(data.array[2]), float.Parse(data.array[3]), float.Parse(data.array[4]));
+
+        if (data.array[6] == "" && character.transform.parent != null)
+        {
+            character.transform.parent = null;
+        }
+        else if (character.transform.root.name != data.array[6])
+        {
+            character.transform.parent = (from ship in entities where ship.name == data.array[6] select ship.GetComponent<Ship>().board).FirstOrDefault();
+        }
+
+        character.transform.localPosition = new Vector3(float.Parse(data.array[2]), float.Parse(data.array[3]), float.Parse(data.array[4]));
         character.transform.rotation = Quaternion.Euler(new Vector3(0, float.Parse(data.array[5]), 0));
         character.name = data.array[1];
         character.GetComponent<Entity>().displayName = data.array[1];

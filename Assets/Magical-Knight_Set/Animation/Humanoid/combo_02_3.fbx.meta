@@ -480,7 +480,7 @@ ModelImporter:
         floatParameter: 200
         intParameter: 2
         messageOptions: 0
-      - time: 0.539726
+      - time: 0.5523311
         functionName: Hit
         data: 
         objectReferenceParameter: {instanceID: 0}

@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     public GameObject inventoryPrefab;
     public GameObject dialogPanelPrefab;
     public GameObject upgradePanelPrefab;
+    public GameObject shipControlPanelPrefab;
     public GameObject popupPrefab;
     public GameObject modifierIconPrefab;
     public Transform modifierPanel;
