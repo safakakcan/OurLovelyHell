@@ -28,8 +28,11 @@ public class PlayerController : MonoBehaviour
     public UnityEngine.UI.Text sp;
     public UnityEngine.UI.Image hpbar;
     public UnityEngine.UI.Image staminabar;
-    public float lookX = 15;
-    public float zoom = -2.5f;
+    public float lookX = 2;
+    public float zoom = 0;
+    public Transform target;
+    public Vector3 offset;
+    public bool localOffset = true;
     public bool busy = false;
 
     // Start is called before the first frame update
@@ -99,6 +102,7 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
+        /*
         if (character == null)
             return;
 
@@ -118,12 +122,42 @@ public class PlayerController : MonoBehaviour
         }
 
         Debug.DrawLine(targetPoint, camPoint, Color.red);
+        */
+    }
+
+    private void LateUpdate()
+    {
+        TraceCharacter();
+    }
+
+    public void Place(Transform _target, Vector3 _offset, bool _localOffset = true)
+    {
+        //Camera.main.transform.SetParent(target);
+        offset = _offset;
+        target = _target;
+        localOffset = _localOffset;
+        lookX = 1;
+        //zoom = offset.z;
     }
 
     void TraceCharacter()
     {
-        transform.position = Vector3.Slerp(transform.position, character.transform.TransformPoint(new Vector3(-1, 2.5f, -2.75f)), Time.deltaTime * 4);
-        transform.LookAt(character.transform.TransformPoint(new Vector3(-1, 1.75f, 0)));
+        if (target == null)
+            return;
+
+        RaycastHit hit;
+
+        if (Physics.Linecast(target.position + (Vector3.up * 2), character.transform.TransformPoint(offset + (Vector3.forward * zoom)), out hit))
+        {
+            transform.position = Vector3.Slerp(transform.position, character.transform.TransformPoint(offset + (Vector3.forward * -hit.distance)), 1);
+        }
+        else
+        {
+            transform.position = Vector3.Slerp(transform.position, character.transform.TransformPoint(offset + (Vector3.forward * zoom)), 1);
+        }
+
+        //transform.position = Vector3.Slerp(transform.position, character.transform.TransformPoint(offset + (Vector3.forward * zoom)), Time.deltaTime * 8);
+        transform.LookAt(character.transform.TransformPoint(Vector3.up * lookX));
     }
 
     public void UseSkill(string skill)

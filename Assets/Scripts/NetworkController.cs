@@ -161,9 +161,7 @@ public class NetworkController : MonoBehaviour
 
         if (Camera.main.name == character.name)
         {
-            Camera.main.transform.SetParent(character.transform);
-            Camera.main.transform.localPosition = new Vector3(0, 2, -3);
-            Camera.main.transform.localRotation = Quaternion.Euler(new Vector3(20, 0, 0));
+            Camera.main.GetComponent<PlayerController>().Place(character.transform, new Vector3(0, 2, 0));
             Camera.main.GetComponent<PlayerController>().character = character.GetComponent<Character>();
             Camera.main.GetComponent<PlayerController>().gameUI.SetActive(true);
             character.GetComponent<Entity>().authority = true;

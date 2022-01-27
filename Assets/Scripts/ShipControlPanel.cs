@@ -15,7 +15,7 @@ public class ShipControlPanel : MonoBehaviour
     void Start()
     {
         Camera.main.GetComponent<PlayerController>().gameUI.SetActive(false);
-        Camera.main.GetComponent<PlayerController>().character.transform.localRotation = Quaternion.identity;
+        Camera.main.GetComponent<PlayerController>().Place(ship.transform, ship.GetComponent<Ship>().cameraPosition, false);
     }
 
     // Update is called once per frame
@@ -60,6 +60,7 @@ public class ShipControlPanel : MonoBehaviour
 
     private void OnDestroy()
     {
+        Camera.main.GetComponent<PlayerController>().Place(Camera.main.GetComponent<PlayerController>().character.transform, new Vector3(0, 2, 0));
         Camera.main.GetComponent<PlayerController>().gameUI.SetActive(true);
     }
 }

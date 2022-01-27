@@ -25,8 +25,16 @@ public class Drag : MonoBehaviour, UnityEngine.EventSystems.IDragHandler, UnityE
     {
         if (Application.platform == RuntimePlatform.WindowsEditor)
         {
-            Camera.main.GetComponent<PlayerController>().lookX = Mathf.Clamp(Camera.main.GetComponent<PlayerController>().lookX - ((Input.mousePosition.y - beginPos.y) * 0.05f), -15, 30);
-            Camera.main.GetComponent<PlayerController>().character.transform.rotation = Quaternion.Euler(new Vector3(0, Camera.main.GetComponent<PlayerController>().character.transform.rotation.eulerAngles.y + ((Input.mousePosition.x - beginPos.x) * 0.2f), 0));
+            Camera.main.GetComponent<PlayerController>().lookX = Mathf.Clamp(Camera.main.GetComponent<PlayerController>().lookX - ((Input.mousePosition.y - beginPos.y) * -0.005f), -3, 6);
+            if (Camera.main.GetComponent<PlayerController>().localOffset)
+            {
+                Camera.main.GetComponent<PlayerController>().target.transform.rotation = 
+                    Quaternion.Euler(new Vector3(0, Camera.main.GetComponent<PlayerController>().character.transform.rotation.eulerAngles.y + ((Input.mousePosition.x - beginPos.x) * 0.25f), 0));
+            }
+            else
+            {
+                Camera.main.GetComponent<PlayerController>().offset = Quaternion.AngleAxis(((Input.mousePosition.x - beginPos.x) * 0.25f), Vector3.up) * Camera.main.GetComponent<PlayerController>().offset;
+            }
 
             //Camera.main.GetComponent<PlayerController>().character.directionChange = (int)Mathf.Round(Mathf.Clamp((Input.mousePosition.x - beginPos.x) / 100, -1, 1));
             
@@ -48,8 +56,16 @@ public class Drag : MonoBehaviour, UnityEngine.EventSystems.IDragHandler, UnityE
 
         if (valid)
         {
-            Camera.main.GetComponent<PlayerController>().lookX = Mathf.Clamp(Camera.main.GetComponent<PlayerController>().lookX - (touch.deltaPosition.y * 0.05f), -15, 30);
-            Camera.main.GetComponent<PlayerController>().character.transform.rotation = Quaternion.Euler(new Vector3(0, Camera.main.GetComponent<PlayerController>().character.transform.rotation.eulerAngles.y + (touch.deltaPosition.x * 0.2f), 0));
+            Camera.main.GetComponent<PlayerController>().lookX = Mathf.Clamp(Camera.main.GetComponent<PlayerController>().lookX - (touch.deltaPosition.y * -0.01f), -3, 6);
+            if (Camera.main.GetComponent<PlayerController>().localOffset)
+            {
+                Camera.main.GetComponent<PlayerController>().target.transform.rotation = 
+                    Quaternion.Euler(new Vector3(0, Camera.main.GetComponent<PlayerController>().character.transform.rotation.eulerAngles.y + (touch.deltaPosition.x * 0.25f), 0));
+            }
+            else
+            {
+                Camera.main.GetComponent<PlayerController>().offset = Quaternion.AngleAxis((touch.deltaPosition.x * 0.25f), Vector3.up) * Camera.main.GetComponent<PlayerController>().offset;
+            }
 
             //Camera.main.GetComponent<PlayerController>().character.directionChange = (int)Mathf.Round(Mathf.Clamp(touch.deltaPosition.x / 100, -1, 1));
         }
