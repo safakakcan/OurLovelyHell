@@ -6968,20 +6968,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 970e504eaf723064897c9bb0e6841f02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  host: 192.168.1.9
+  host: 192.168.1.8
   port: 8090
   autoConnect: 1
   runInterScenes: 1
   debug: 0
   eventFilters:
-  - schema: Ping *
+  - schema: Ping
     onMatched:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 544274697}
           m_TargetAssemblyTypeName: NetworkController, Assembly-CSharp
-          m_MethodName: CalculatePing
-          m_Mode: 0
+          m_MethodName: ShowPing
+          m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -7948,7 +7948,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 659939103}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -111.2, y: 7.8, z: 58.59}
+  m_LocalPosition: {x: -93.91, y: 3.386, z: 113.29}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -13207,6 +13207,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Gorfus
       objectReference: {fileID: 0}
+    - target: {fileID: 910534760025811631, guid: bf9efedb3dfd3b040916f593f914b3e5, type: 3}
+      propertyPath: authority
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bf9efedb3dfd3b040916f593f914b3e5, type: 3}
 --- !u!4 &543450653703121285
@@ -13217,7 +13221,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 919132149160735551}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -133.68951, y: -3.55, z: 204.38}
+  m_LocalPosition: {x: -150.8, y: -3.55, z: 224.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1330591581692071275}

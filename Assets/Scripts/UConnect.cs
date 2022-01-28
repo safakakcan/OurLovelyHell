@@ -231,7 +231,6 @@ public class NetworkData
 {
     public string cmd;
     public string[] array;
-    public string single { get { return (array != null && array.Length > 0) ? array[0] : null; } }
 
     public NetworkData(params string[] _array)
     {

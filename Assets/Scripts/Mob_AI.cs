@@ -80,7 +80,7 @@ public class Mob_AI : MonoBehaviour
             if (Vector3.Distance(transform.position, destination) < attackDistance)
             {
                 GetComponent<Entity>().speedChange = 0;
-                GetComponent<Animator>().SetTrigger("Attack");
+                GetComponent<Animator>().SetTrigger("Attack");  // NETWORK
             }
             else
             {

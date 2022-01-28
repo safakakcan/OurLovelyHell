@@ -14,8 +14,8 @@ public class NetworkController : MonoBehaviour
 
     [Header("Connection")]
     public int ping = 999;
-    private Coroutine pingDetect = null;
-    private System.DateTime pingTime = System.DateTime.Now;
+    System.DateTime pingTime = System.DateTime.Now;
+    float pingDelay = 1;
 
     [Header("UI")]
     public UnityEngine.UI.Text pingText;
@@ -29,33 +29,25 @@ public class NetworkController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (pingDetect == null)
+        pingDelay -= Time.deltaTime;
+
+        if (pingDelay <= 0)
         {
-            pingDetect = StartCoroutine(Ping());
+            SendPing();
+            pingDelay = 1;
         }
     }
 
-    IEnumerator Ping()
+    void SendPing()
     {
-        yield return new WaitForSeconds(1);
         pingTime = System.DateTime.Now;
-        GetComponent<UConnect>().SendRequest("Ping", pingTime.Ticks.ToString());
+        GetComponent<UConnect>().SendRequest("Ping");
     }
 
-    public void CalculatePing(NetworkData data)
+    public void ShowPing()
     {
-        if (data.array[0] == pingTime.Ticks.ToString())
-        {
-            var time = System.DateTime.Now - pingTime;
-            ping = Mathf.Clamp((int)time.TotalMilliseconds, 1, 999);
-        }
-        else
-        {
-            ping = 999;
-        }
-
-        pingDetect = null;
-        pingText.text = "FPS: " + ((int)(1 / Time.deltaTime)).ToString() + " | Ping: " + GameObject.FindGameObjectWithTag("GameController").GetComponent<NetworkController>().ping.ToString();
+        ping = (int)Mathf.Clamp((float)((System.DateTime.Now - pingTime).TotalMilliseconds), 1f, 999f);
+        pingText.text = "FPS: " + ((int)(1 / Time.deltaTime)).ToString() + " | Ping: " + ping.ToString();
     }
 
     public void Move(NetworkData data)
@@ -103,7 +95,7 @@ public class NetworkController : MonoBehaviour
 
     public void LoadGame(NetworkData data)
     {
-        if (data.array.Length > 0)
+        if (data.array.Length > 0 && data.array[0] != "")
         {
             string[] characters = data.array[0].Split(';');
             foreach (string character in characters)
@@ -111,7 +103,7 @@ public class NetworkController : MonoBehaviour
                 string[] values = character.Split('|');
                 var c = Instantiate<GameObject>(characterPrefab);
                 entities.Add(c.GetComponent<Entity>());
-                
+
                 c.name = values[0];
                 c.GetComponent<Entity>().displayName = c.name;
                 c.GetComponent<Entity>().speedChange = int.Parse(values[1]);
@@ -128,7 +120,7 @@ public class NetworkController : MonoBehaviour
 
                 c.transform.localPosition = new Vector3(float.Parse(values[3]), float.Parse(values[4]), float.Parse(values[5]));
                 c.transform.rotation = Quaternion.Euler(new Vector3(0, float.Parse(values[6]), 0));
-                
+
                 c.GetComponent<Entity>().Init();
                 Debug.Log("Spawn: " + values[0]);
             }
@@ -203,5 +195,11 @@ public class NetworkController : MonoBehaviour
         {
             entity.ApplyDamage(damage);
         }
+    }
+
+    public void SetAuthority(NetworkData data)
+    {
+        Entity entity = (from e in entities where e.name == data.array[1] select e).FirstOrDefault();
+        entity.authority = Camera.main.name == data.array[2];
     }
 }

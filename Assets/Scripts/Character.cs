@@ -384,6 +384,11 @@ public class Character : Entity
             Instantiate(Camera.main.GetComponent<PlayerController>().gameData.items[equipments[1].index].equipmentPrefab, handL_Socket);
         }
     }
+
+    public void SetAuthority(Entity entity)
+    {
+        GameObject.FindGameObjectWithTag("GameController").GetComponent<UConnect>().CallEvent("send", "World", "SetAuthority", entity.name, name);
+    }
 }
 
 public enum ECareerType
