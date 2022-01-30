@@ -5,10 +5,11 @@ using System.Net;
 using System.Net.Sockets;
 using System.Linq;
 using UnityEngine;
+using System.Text;
 
 public class UConnect : MonoBehaviour
 {
-    public bool Connected { get { return client.Connected; } }
+    public bool Connected { get { return client != null; } }
 
     [Header("Host Address")]
     [SerializeField]
@@ -22,10 +23,11 @@ public class UConnect : MonoBehaviour
     [SerializeField]
     private bool debug = false;
 
-    TcpClient client = new TcpClient();
-    NetworkStream stream;
-    StreamReader reader;
-    StreamWriter writer;
+    UdpClient client;
+    IPEndPoint endpoint;
+    //NetworkStream stream;
+    //StreamReader reader;
+    //StreamWriter writer;
     System.Threading.Thread thread;
     List<string> buffer = new List<string>();
 
@@ -38,7 +40,7 @@ public class UConnect : MonoBehaviour
         if (runInterScenes)
             DontDestroyOnLoad(this.gameObject);
 
-        if (autoConnect && !Connected)
+        if (autoConnect)
             Connect();
     }
 
@@ -51,15 +53,15 @@ public class UConnect : MonoBehaviour
             {
                 try
                 {
-                    NetworkData data = JsonUtility.FromJson<NetworkData>(buffer[0]);
+                    string data = buffer[0];
                     
                     foreach (EventFilter filter in eventFilters)
                     {
-                        if (filter.Compare(data.cmd))
+                        if (filter.Compare(data))
                         {
                             if (debug)
                                 Debug.Log("INVOKED: " + filter.onMatched.GetPersistentMethodName(0));
-                            filter.onMatched.Invoke(data);
+                            filter.onMatched.Invoke(data.Split('\n'));
                             break;
                         }
                     }
@@ -78,10 +80,10 @@ public class UConnect : MonoBehaviour
 
     public void Connect()
     {
-        client = new TcpClient(host, port);
-        stream = client.GetStream();
-        reader = new StreamReader(stream);
-        writer = new StreamWriter(stream);
+        client = new UdpClient();
+        endpoint = new IPEndPoint(IPAddress.Parse(host), port);
+        client.Connect(endpoint);
+
         thread = new System.Threading.Thread(() => Listen());
         thread.Start();
     }
@@ -94,45 +96,39 @@ public class UConnect : MonoBehaviour
 
     void Listen()
     {
-        while (client.Connected)
+        while (Connected)
         {
-            string json = reader.ReadLine();
-            buffer.Add(json);
-            if (debug)
-                Debug.Log("RESPONSE: " + json);
+            var receivedData = client.Receive(ref endpoint);
+            System.Threading.Thread th = new System.Threading.Thread(() => AddToBuffer(receivedData));
+            th.Start();
         }
     }
 
-    void Send(Request request)
+    void AddToBuffer(byte[] receivedData)
     {
-        if (Connected && writer != null)
+        string data = Encoding.UTF8.GetString(receivedData);
+        buffer.Add(data);
+
+        if (debug)
+            Debug.Log("RESPONSE: " + data);
+    }
+
+    public void Send(string data)
+    {
+        if (Connected)
         {
-            string json = JsonUtility.ToJson(request);
-            writer.WriteLine(json);
-            writer.Flush();
+            byte[] bytes = Encoding.UTF8.GetBytes(data);
+            client.Send(bytes, bytes.Length);
+
             if (debug)
-                Debug.Log("REQUEST: " + json);
+                Debug.Log("REQUEST: " + data);
         }
-    }
-
-    public void SendRequest(params string[] parameters)
-    {
-        Request request = new Request();
-        request.cmd = parameters;
-        request.await = true;
-        Send(request);
-    }
-
-    public void CallEvent(params string[] parameters)
-    {
-        Request request = new Request();
-        request.cmd = parameters;
-        request.await = false;
-        Send(request);
     }
 
     private void OnDestroy()
     {
+        GetComponent<UConnect>().Send("quit\n" + Camera.main.name);
+
         if (Connected)
             Disconnect();
     }
@@ -142,9 +138,9 @@ public class UConnect : MonoBehaviour
 public class EventFilter
 {
     public string schema;
-    public UnityEngine.Events.UnityEvent<NetworkData> onMatched;
+    public UnityEngine.Events.UnityEvent<string[]> onMatched;
 
-    public EventFilter(string Schema, UnityEngine.Events.UnityEvent<NetworkData> OnMatchedEvent = null)
+    public EventFilter(string Schema, UnityEngine.Events.UnityEvent<string[]> OnMatchedEvent = null)
     {
         schema = Schema;
         onMatched = OnMatchedEvent;

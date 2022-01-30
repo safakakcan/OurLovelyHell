@@ -162,7 +162,7 @@ public class PlayerController : MonoBehaviour
 
     public void UseSkill(string skill)
     {
-        GameObject.FindGameObjectWithTag("GameController").GetComponent<UConnect>().CallEvent("send", "World", "Skill", skill, character.name);
+        GameObject.FindGameObjectWithTag("GameController").GetComponent<UConnect>().Send(string.Format("{0}\n{1}\n{2}", "skill", skill, character.name));
     }
 
     public void ShowInventory()

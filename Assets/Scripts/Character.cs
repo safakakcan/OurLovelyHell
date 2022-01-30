@@ -139,7 +139,7 @@ public class Character : Entity
                     if (!entity.dead)
                     {
                         int damage = (int)(e.floatParameter * (TotalStats().attack / entity.TotalStats().defence) * Random.Range(0.9f, 1.1f) * (1 + (stats.level * 0.1f)));
-                        FindObjectOfType<UConnect>().CallEvent("send", "World", "ApplyDamage", name, entity.name, damage.ToString());
+                        FindObjectOfType<UConnect>().Send(string.Format("{0}\n{1}\n{2}\n{3}", "damage", name, entity.name, damage.ToString()));
                         
                         if (target == null && name == Camera.main.name)
                         {
@@ -387,7 +387,7 @@ public class Character : Entity
 
     public void SetAuthority(Entity entity)
     {
-        GameObject.FindGameObjectWithTag("GameController").GetComponent<UConnect>().CallEvent("send", "World", "SetAuthority", entity.name, name);
+        
     }
 }
 

@@ -80,7 +80,7 @@ public class Entity : MonoBehaviour
 
         if (authority)
         {
-            if (update == null)
+            if (updateFrequency > 0 && update == null && GameObject.FindGameObjectWithTag("GameController").GetComponent<UConnect>().Connected)
             {
                 update = StartCoroutine(UpdateNetwork());
             }
@@ -332,8 +332,17 @@ public class Entity : MonoBehaviour
 
     IEnumerator UpdateNetwork()
     {
-        GameObject.FindGameObjectWithTag("GameController").GetComponent<UConnect>().CallEvent("Move", name, speedChange.ToString(), directionChange.ToString(),
-                transform.localPosition.x.ToString("n2"), transform.localPosition.y.ToString("n2"), transform.localPosition.z.ToString("n2"), transform.rotation.eulerAngles.y.ToString("n2"), transform.root.name == name ? "" : transform.root.name);
+        if (transform.root.name == name)
+        {
+            GameObject.FindGameObjectWithTag("GameController").GetComponent<UConnect>().Send(string.Format("{0}\n{1}\n{2}\n{3}\n{4}\n{5}\n{6}\n{7}\n{8}", "move", name, speedChange.ToString(), directionChange.ToString(),
+                transform.position.x.ToString("n2"), transform.position.y.ToString("n2"), transform.position.z.ToString("n2"), transform.rotation.eulerAngles.y.ToString("n2"), ""));
+        }
+        else
+        {
+            GameObject.FindGameObjectWithTag("GameController").GetComponent<UConnect>().Send(string.Format("{0}\n{1}\n{2}\n{3}\n{4}\n{5}\n{6}\n{7}\n{8}\n{9}\n{10}\n{11}", "move", name, speedChange.ToString(), directionChange.ToString(),
+                transform.position.x.ToString("n2"), transform.position.y.ToString("n2"), transform.position.z.ToString("n2"), transform.rotation.eulerAngles.y.ToString("n2"), transform.root.name,
+                transform.localPosition.x.ToString("n2"), transform.localPosition.y.ToString("n2"), transform.localPosition.z.ToString("n2")));
+        }
         
         yield return new WaitForSeconds((1 / updateFrequency));
         update = null;

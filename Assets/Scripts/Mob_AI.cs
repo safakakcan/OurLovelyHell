@@ -109,7 +109,7 @@ public class Mob_AI : MonoBehaviour
                     if (!entity.dead)
                     {
                         int damage = (int)(e.floatParameter * (GetComponent<Entity>().TotalStats().attack / entity.TotalStats().defence) * Random.Range(0.9f, 1.1f) * (1 + (GetComponent<Entity>().stats.level * 0.1f)));
-                        FindObjectOfType<UConnect>().CallEvent("send", "World", "ApplyDamage", name, entity.name, damage.ToString());
+                        FindObjectOfType<UConnect>().Send(string.Format("{0}\n{1}\n{2}\n{3}", "damage", name, entity.name, damage.ToString()));
 
                         if (target == null && name == Camera.main.name)
                         {
