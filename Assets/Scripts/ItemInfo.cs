@@ -97,9 +97,10 @@ public class ItemInfo : MonoBehaviour
         }
 
         transform.GetChild(1).GetChild(2).GetComponent<UnityEngine.UI.Text>().text = desc;
+        transform.GetChild(1).GetChild(3).gameObject.SetActive(Camera.main.GetComponent<PlayerController>().gameData.items[slot.array[slot.index].index].function != "");
     }
 
-    public void Consume()
+    public void Use()
     {
         var index = slot.array[slot.index].index;
         Item item = Camera.main.GetComponent<PlayerController>().gameData.items[index];

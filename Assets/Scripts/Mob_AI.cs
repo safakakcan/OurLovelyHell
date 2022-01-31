@@ -11,10 +11,13 @@ public class Mob_AI : MonoBehaviour
     public float aggroDistance = 10;
     public float attackDistance = 5;
     public float habitatRadius = 20;
+    public float authorityDistance = 25;
+    public float authorityCheckDelay = 5;
 
     Vector3 spawnPoint;
     Vector3 destination;
     Coroutine behaviour = null;
+    Coroutine authorityCheck = null;
 
     // Start is called before the first frame update
     void Start()
@@ -49,6 +52,43 @@ public class Mob_AI : MonoBehaviour
                 GetComponent<Entity>().speedChange = 0;
             }
         }
+
+        if (authorityCheck == null)
+        {
+            authorityCheck = StartCoroutine(AuthorityCheck());
+        }
+    }
+
+    IEnumerator AuthorityCheck()
+    {
+        yield return new WaitForSeconds(authorityCheckDelay);
+
+        Character[] characters = GameObject.FindObjectsOfType<Character>();
+        Character nearest = null;
+        float distance = float.MaxValue;
+
+        foreach (var ch in characters)
+        {
+            var dist = Vector3.Distance(transform.position, ch.transform.position);
+            if (dist < distance)
+            {
+                nearest = ch;
+                distance = dist;
+            }
+        }
+
+        if (nearest != null && distance <= authorityDistance && nearest.name == Camera.main.name)
+        {
+            if (!GetComponent<Entity>().authority)
+                GameObject.FindGameObjectWithTag("GameController").GetComponent<UConnect>().Send(string.Format("{0}\n{1}\n{2}", "authority", name, nearest.name));
+        }
+        else
+        {
+            if (GetComponent<Entity>().authority)
+                GameObject.FindGameObjectWithTag("GameController").GetComponent<UConnect>().Send(string.Format("{0}\n{1}\n{2}", "authority", name, ""));
+        }
+
+        authorityCheck = null;
     }
 
     IEnumerator Behaviour()
@@ -80,7 +120,7 @@ public class Mob_AI : MonoBehaviour
             if (Vector3.Distance(transform.position, destination) < attackDistance)
             {
                 GetComponent<Entity>().speedChange = 0;
-                GetComponent<Animator>().SetTrigger("Attack");  // NETWORK
+                GameObject.FindGameObjectWithTag("GameController").GetComponent<UConnect>().Send(string.Format("{0}\n{1}\n{2}", "skill", "Attack", name));
             }
             else
             {

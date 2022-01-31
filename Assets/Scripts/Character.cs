@@ -14,8 +14,9 @@ public class Character : Entity
     public InventoryItem[] equipments = new InventoryItem[6];
     public InventoryItem[] inventory = new InventoryItem[24];
 
-    [Header("Quests")]
-    public List<QuestData> quests;
+    [Header("Quests And Careers")]
+    public List<QuestData> quests = new List<QuestData>();
+    public List<Career> careers = new List<Career>();
 
     [Header("Equipment Sockets")]
     public Transform handR_Socket;
@@ -384,23 +385,10 @@ public class Character : Entity
             Instantiate(Camera.main.GetComponent<PlayerController>().gameData.items[equipments[1].index].equipmentPrefab, handL_Socket);
         }
     }
-
-    public void SetAuthority(Entity entity)
-    {
-        
-    }
-}
-
-public enum ECareerType
-{
-    Fisher,
-    Farmer,
-    Miner,
-    Alchemist
 }
 
 public class Career
 {
-    public ECareerType careerType;
+    public int index;
     public float progress;
 }

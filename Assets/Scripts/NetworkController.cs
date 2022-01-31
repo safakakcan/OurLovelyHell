@@ -50,6 +50,11 @@ public class NetworkController : MonoBehaviour
         pingText.text = "FPS: " + ((int)(1 / Time.deltaTime)).ToString() + " | Ping: " + ping.ToString();
     }
 
+    public void Connected(string[] data)
+    {
+        GetComponent<UConnect>().Connected = true;
+    }
+
     public void Move(string[] data)
     {
         Entity entity = (from e in entities where e.name == data[1] select e).FirstOrDefault();
@@ -97,6 +102,7 @@ public class NetworkController : MonoBehaviour
 
     public void JoinGame()
     {
+        Camera.main.name = Camera.main.GetComponent<PlayerController>().username.text;
         GetComponent<UConnect>().Send("load");
         Camera.main.GetComponent<PlayerController>().mainMenu.SetActive(false);
     }
@@ -115,30 +121,31 @@ public class NetworkController : MonoBehaviour
                 c.GetComponent<Entity>().displayName = c.name;
                 c.GetComponent<Entity>().speedChange = int.Parse(values[1]);
                 c.GetComponent<Entity>().directionChange = int.Parse(values[2]);
-                
+
                 if (values[7] == "")
                 {
                     c.transform.parent = null;
-                    c.transform.position = new Vector3(float.Parse(values[8]), float.Parse(values[9]), float.Parse(values[10]));
+                    c.transform.position = new Vector3(float.Parse(values[3]), float.Parse(values[4]), float.Parse(values[5]));
+                    c.GetComponent<Entity>().fixedPosition = c.transform.position;
                 }
-                else if (c.transform.root.name != values[7])
+                else
                 {
                     c.transform.parent = (from ship in entities where ship.name == values[7] select ship.GetComponent<Ship>().board).FirstOrDefault();
-                    c.transform.localPosition = new Vector3(float.Parse(values[3]), float.Parse(values[4]), float.Parse(values[5]));
+                    c.transform.localPosition = new Vector3(float.Parse(values[8]), float.Parse(values[9]), float.Parse(values[10]));
+                    c.GetComponent<Entity>().fixedPosition = c.transform.localPosition;
                 }
 
                 c.transform.rotation = Quaternion.Euler(new Vector3(0, float.Parse(values[6]), 0));
-                c.GetComponent<Entity>().fixedPosition = c.transform.localPosition;
 
                 c.GetComponent<Entity>().Init();
                 Debug.Log("Spawn: " + values[0]);
             }
         }
         
-        string charName = "Player_" + (Random.Range(100000, 999999).ToString());
-        Camera.main.name = charName;
+        //string charName = "Player_" + (Random.Range(100000, 999999).ToString());
+        //Camera.main.name = charName;
         Vector3 pos = GameObject.FindGameObjectWithTag("SpawnPoint").transform.position;
-        GetComponent<UConnect>().Send(string.Format("{0}\n{1}\n{2}\n{3}\n{4}", "spawn", charName, pos.x.ToString(), pos.y.ToString(), pos.z.ToString()));
+        GetComponent<UConnect>().Send(string.Format("{0}\n{1}\n{2}\n{3}\n{4}", "spawn", Camera.main.name, pos.x.ToString(), pos.y.ToString(), pos.z.ToString()));
     }
 
     public void SpawnCharacter(string[] data)

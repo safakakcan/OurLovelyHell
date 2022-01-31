@@ -8,7 +8,7 @@ public class InventoryItem
     public int index = 0;
     public int quantity = 0;
     public float durability = 1;
-    public ItemSocket socket = null;
+    public int socket = -1;
 
     public InventoryItem(int _index, int _quantity)
     {

@@ -9,7 +9,7 @@ using System.Text;
 
 public class UConnect : MonoBehaviour
 {
-    public bool Connected { get { return client != null; } }
+    public bool Connected = true;
 
     [Header("Host Address")]
     [SerializeField]
@@ -86,6 +86,8 @@ public class UConnect : MonoBehaviour
 
         thread = new System.Threading.Thread(() => Listen());
         thread.Start();
+        
+        GetComponent<UConnect>().Send("connect");
     }
 
     public void Disconnect()
