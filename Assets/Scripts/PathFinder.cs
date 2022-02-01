@@ -16,15 +16,34 @@ public class PathFinder : MonoBehaviour
 
     private void Update()
     {
-		if (pathFinding == null && targetRoute != null && Camera.main.GetComponent<PlayerController>().character != null)
-		{
-			pathFinding = StartCoroutine(PathFinding());
+		if (targetRoute != null && Camera.main.GetComponent<PlayerController>().character != null)
+        {
+			if (pathFinding == null)
+			{
+				pathFinding = StartCoroutine(PathFinding());
+			}
+
+			if (path.Count > 0)
+				line.SetPosition(0, Camera.main.GetComponent<PlayerController>().character.transform.position + Vector3.up);
 		}
 	}
 
 	IEnumerator PathFinding()
 	{
 		path = GetShortestPath(FindNearestRoute(Camera.main.GetComponent<PlayerController>().character.transform.position), targetRoute);
+
+		if (path.Count > 1)
+        {
+			float dist1 = Vector3.Distance(path[0].transform.position, path[1].transform.position);
+			float dist2 = Vector3.Distance(path[0].transform.position, Camera.main.GetComponent<PlayerController>().character.transform.position);
+			if (dist2 * 0.75f < dist1)
+				path.RemoveAt(0);
+		}
+
+		for (int i = 1; i < 7; i++)
+        {
+			line.SetPosition(i, i - 1 < path.Count ? path[i - 1].transform.position : path.Last().transform.position);
+		}
 
 		yield return new WaitForSeconds(2);
 		pathFinding = null;
@@ -67,8 +86,8 @@ public class PathFinder : MonoBehaviour
 		{
 			throw new ArgumentNullException();
 		}
-		
-		List<Route> path = new List<Route>();
+
+		path.Clear();
 
 		if (start == end)
 		{
@@ -150,6 +169,7 @@ public class PathFinder : MonoBehaviour
 		return path;
 	}
 
+#if UNITY_EDITOR
 	[UnityEditor.MenuItem("Routes/Refresh")]
 	public static void RefreshRoutes()
 	{
@@ -173,4 +193,5 @@ public class PathFinder : MonoBehaviour
 			route.routes = newRoutes;
 		}
 	}
+#endif
 }
