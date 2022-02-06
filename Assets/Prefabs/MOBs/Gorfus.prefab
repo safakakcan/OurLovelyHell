@@ -255,6 +255,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: addcf429e8c4c0c41a4f9cd4d05abda2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  index: 0
   displayName: Gorfus
   authority: 1
   stats:
@@ -279,13 +280,14 @@ MonoBehaviour:
   speedChange: 0
   directionChange: 0
   fixedPosition: {x: 0, y: 0, z: 0}
+  fixedRotation: 0
   positionFixingSpeed: 2
   wrapDistance: 4
   dead: 0
   hitSound: {fileID: 8300000, guid: a8057925371fa2341b3a28890a3d9e6d, type: 3}
   rewards: []
   expReward: 1
-  updateFrequency: 5
+  updateFrequency: 2
   bodyRenderer: {fileID: 2371566564492908334}
 --- !u!114 &910534760025811630
 MonoBehaviour:
@@ -304,6 +306,8 @@ MonoBehaviour:
   aggroDistance: 10
   attackDistance: 5
   habitatRadius: 20
+  authorityDistance: 25
+  authorityCheckDelay: 5
 --- !u!1 &1782217688533815202
 GameObject:
   m_ObjectHideFlags: 0

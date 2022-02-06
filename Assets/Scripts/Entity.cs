@@ -2,9 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System;
 
 public class Entity : MonoBehaviour
 {
+    public int index = 0;
     public string displayName = "Entity";
     public bool authority = false;
     public Stats stats = new Stats();
@@ -15,6 +17,7 @@ public class Entity : MonoBehaviour
     public int speedChange = 0;
     public int directionChange = 0;
     public Vector3 fixedPosition = Vector3.zero;
+    public float fixedRotation = 0;
     public float positionFixingSpeed = 2;
     public float wrapDistance = 4;
     public bool dead = false;
@@ -22,7 +25,7 @@ public class Entity : MonoBehaviour
     public Reward[] rewards;
     public float expReward = 1;
 
-    public int updateFrequency = 5;
+    public int updateFrequency = 1;
     Coroutine update = null;
     public Renderer bodyRenderer;
 
@@ -155,6 +158,11 @@ public class Entity : MonoBehaviour
             {
                 transform.localPosition = fixedPosition;
             }
+        }
+
+        if (Mathf.Abs(transform.rotation.eulerAngles.y - fixedRotation) > 0.1f)
+        {
+            Quaternion.Lerp(transform.rotation, Quaternion.Euler(new Vector3(transform.rotation.eulerAngles.x, fixedRotation, transform.rotation.eulerAngles.z)), Time.deltaTime);
         }
     }
 

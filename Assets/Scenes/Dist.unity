@@ -7617,8 +7617,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Connected: 1
-  host: 176.217.65.169
-  port: 8090
+  host: 127.0.0.1
+  port: 25001
   autoConnect: 1
   runInterScenes: 1
   debug: 0
@@ -11271,12 +11271,12 @@ LineRenderer:
   m_SortingOrder: 0
   m_Positions:
   - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 1}
-  - {x: 0, y: 0, z: 1}
-  - {x: 0, y: 0, z: 1}
-  - {x: 0, y: 0, z: 1}
-  - {x: 0, y: 0, z: 1}
-  - {x: 0, y: 0, z: 1}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 0.1
@@ -15213,13 +15213,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bf9efedb3dfd3b040916f593f914b3e5, type: 3}
---- !u!1001 &4854920248896487493
+--- !u!1001 &1082099014255628172
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3610981501252743905, guid: 8c2179e64d09a5e479ddb3e137d96735, type: 3}
+      propertyPath: updateFrequency
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3610981501252743906, guid: 8c2179e64d09a5e479ddb3e137d96735, type: 3}
       propertyPath: m_Name
       value: Ship

@@ -84,15 +84,16 @@ public class NetworkController : MonoBehaviour
                 }
                 
                 entity.fixedPosition = pos;
-                entity.transform.rotation = rot;
+                entity.fixedRotation = rot.eulerAngles.y;
 
-                //entity.gameObject.SetActive(Vector3.Distance(Camera.main.transform.position, entity.transform.position) < 25);
+                entity.gameObject.SetActive(Vector3.Distance(Camera.main.transform.position, entity.transform.position) < 25);
             }
         }
         else
         {
             Debug.Log("ENTITY NOT FOUND: " + data[1]);
         }
+        
     }
 
     public void Login(string username, string password)
@@ -136,6 +137,7 @@ public class NetworkController : MonoBehaviour
                 }
 
                 c.transform.rotation = Quaternion.Euler(new Vector3(0, float.Parse(values[6]), 0));
+                c.GetComponent<Entity>().fixedRotation = c.transform.rotation.eulerAngles.y;
 
                 c.GetComponent<Entity>().Init();
                 Debug.Log("Spawn: " + values[0]);

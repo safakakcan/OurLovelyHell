@@ -26,6 +26,14 @@ public class PathFinder : MonoBehaviour
 			if (path.Count > 0)
 				line.SetPosition(0, Camera.main.GetComponent<PlayerController>().character.transform.position + Vector3.up);
 		}
+        else
+        {
+			int count = line.positionCount;
+			for (int i = 0; i < count; i++)
+			{
+				line.SetPosition(i, Vector3.zero);
+			}
+		}
 	}
 
 	IEnumerator PathFinding()

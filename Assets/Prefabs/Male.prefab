@@ -1919,6 +1919,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92b2683f260335045a6a1405ad02bf6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  index: 0
   displayName: Player
   authority: 0
   stats:
@@ -1943,165 +1944,140 @@ MonoBehaviour:
   speedChange: 0
   directionChange: 0
   fixedPosition: {x: 0, y: 0, z: 0}
+  fixedRotation: 0
+  positionFixingSpeed: 2
+  wrapDistance: 4
   dead: 0
   hitSound: {fileID: 8300000, guid: a8057925371fa2341b3a28890a3d9e6d, type: 3}
   rewards: []
   expReward: 1
-  updateFrequency: 5
+  updateFrequency: 4
   bodyRenderer: {fileID: 9077675647549483874}
+  partyId: 
+  clan: 
   inventorySlotCount: 10
   equipments:
   - index: 0
     quantity: 0
     durability: 0
-    socket:
-      index: 0
+    socket: 0
   - index: 0
     quantity: 0
     durability: 0
-    socket:
-      index: 0
+    socket: 0
   - index: 0
     quantity: 0
     durability: 0
-    socket:
-      index: 0
+    socket: 0
   - index: 0
     quantity: 0
     durability: 0
-    socket:
-      index: 0
+    socket: 0
   - index: 0
     quantity: 0
     durability: 0
-    socket:
-      index: 0
+    socket: 0
   - index: 0
     quantity: 0
     durability: 0
-    socket:
-      index: 0
+    socket: 0
   inventory:
   - index: 0
     quantity: 0
     durability: 0
-    socket:
-      index: 0
+    socket: 0
   - index: 0
     quantity: 0
     durability: 0
-    socket:
-      index: 0
+    socket: 0
   - index: 0
     quantity: 0
     durability: 0
-    socket:
-      index: 0
+    socket: 0
   - index: 0
     quantity: 0
     durability: 0
-    socket:
-      index: 0
+    socket: 0
   - index: 0
     quantity: 0
     durability: 0
-    socket:
-      index: 0
+    socket: 0
   - index: 0
     quantity: 0
     durability: 0
-    socket:
-      index: 0
+    socket: 0
   - index: 0
     quantity: 0
     durability: 0
-    socket:
-      index: 0
+    socket: 0
   - index: 0
     quantity: 0
     durability: 0
-    socket:
-      index: 0
+    socket: 0
   - index: 0
     quantity: 0
     durability: 0
-    socket:
-      index: 0
+    socket: 0
   - index: 0
     quantity: 0
     durability: 0
-    socket:
-      index: 0
+    socket: 0
   - index: 0
     quantity: 0
     durability: 0
-    socket:
-      index: 0
+    socket: 0
   - index: 0
     quantity: 0
     durability: 0
-    socket:
-      index: 0
+    socket: 0
   - index: 0
     quantity: 0
     durability: 0
-    socket:
-      index: 0
+    socket: 0
   - index: 0
     quantity: 0
     durability: 0
-    socket:
-      index: 0
+    socket: 0
   - index: 0
     quantity: 0
     durability: 0
-    socket:
-      index: 0
+    socket: 0
   - index: 0
     quantity: 0
     durability: 0
-    socket:
-      index: 0
+    socket: 0
   - index: 0
     quantity: 0
     durability: 0
-    socket:
-      index: 0
+    socket: 0
   - index: 0
     quantity: 0
     durability: 0
-    socket:
-      index: 0
+    socket: 0
   - index: 0
     quantity: 0
     durability: 0
-    socket:
-      index: 0
+    socket: 0
   - index: 0
     quantity: 0
     durability: 0
-    socket:
-      index: 0
+    socket: 0
   - index: 0
     quantity: 0
     durability: 0
-    socket:
-      index: 0
+    socket: 0
   - index: 0
     quantity: 0
     durability: 0
-    socket:
-      index: 0
+    socket: 0
   - index: 0
     quantity: 0
     durability: 0
-    socket:
-      index: 0
+    socket: 0
   - index: 0
     quantity: 0
     durability: 0
-    socket:
-      index: 0
+    socket: 0
   quests: []
   handR_Socket: {fileID: 3856809529306816938}
   handL_Socket: {fileID: 1394547105283632311}

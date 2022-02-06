@@ -5,9 +5,10 @@ using UnityEngine;
 [RequireComponent(typeof(Entity))]
 public class Ship : MonoBehaviour
 {
+    public float waterLevel = 0;
     public Transform board;
-
     public Vector3 cameraPosition;
+    public ParticleSystem speedFX;
 
     // Start is called before the first frame update
     void Start()
@@ -18,7 +19,16 @@ public class Ship : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (GetComponent<Entity>().speedChange > 2)
+        {
+            if (!speedFX.isPlaying)
+                speedFX.Play(true);
+        }
+        else
+        {
+            if (speedFX.isPlaying)
+                speedFX.Stop(true);
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -42,8 +52,20 @@ public class Ship : MonoBehaviour
 
     private void FixedUpdate()
     {
-        transform.Translate(Vector3.forward * GetComponent<Entity>().speedChange * Time.deltaTime);
+        bool move = true;
+        RaycastHit hit;
+        
+        if (Physics.Raycast(transform.position, transform.forward, out hit, 20))
+        {
+            Entity e;
+            move = hit.collider.TryGetComponent<Entity>(out e);
+        }
+
+        if (move)
+            transform.Translate(Vector3.forward * GetComponent<Entity>().speedChange * Time.deltaTime);
         transform.Rotate(Vector3.up * GetComponent<Entity>().directionChange * Time.deltaTime);
+        transform.localRotation = Quaternion.Lerp(transform.localRotation, Quaternion.Euler(0, transform.localRotation.eulerAngles.y, Mathf.Clamp(-GetComponent<Entity>().directionChange, -10, 10)), Time.deltaTime);
+        transform.position = new Vector3(transform.position.x, waterLevel, transform.position.z);
     }
 
     private void OnMouseUpAsButton()
